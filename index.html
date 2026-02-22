@@ -391,23 +391,27 @@ button { font-family: inherit; }
   border: 0.5px solid var(--border-light);
   box-shadow: var(--shadow-md); overflow: hidden;
 }
+.guide-deeplink-label {
+  display: block; text-align: center;
+  font-size: 12px; font-weight: 600; color: var(--sub);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 16px;
+  width: 100%; max-width: 560px;
+}
 .guide-deeplink {
   display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; max-width: 560px;
   padding: 20px 28px;
   background: var(--ig-gradient);
   color: #fff; text-decoration: none; font-size: 17px; font-weight: 600;
-  border-radius: 16px 16px 0 0;
+  border-radius: 16px;
   letter-spacing: 0.01em;
-  box-shadow: 0 4px 20px rgba(225,48,108,0.25);
-  transition: all 0.3s var(--ease-out);
+  box-shadow: 0 6px 28px rgba(225,48,108,0.3);
+  transition: all 0.4s var(--ease-out);
+  margin-bottom: 24px;
 }
-.guide-deeplink:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(225,48,108,0.35); }
+.guide-deeplink:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 40px rgba(225,48,108,0.4); }
 .guide-deeplink svg { flex-shrink: 0; width: 20px; height: 20px; }
-.guide-deeplink-label {
-  display: block; text-align: center;
-  font-size: 12px; font-weight: 500; color: var(--sub);
-  padding: 10px 24px 0; letter-spacing: 0.05em;
-}
 .guide-steps { padding: 8px 0; }
 .guide-step {
   display: flex; gap: 16px; padding: 18px 24px;
@@ -1387,12 +1391,12 @@ a.user-name:hover { color: var(--accent); }
       <h1>つながりを、<br>透明に。</h1>
       <p>Instagramのフォロー関係を、あなたのブラウザだけで解析。</p>
     </div>
+    <p class="guide-deeplink-label">STEP 1 — まずはデータを取得</p>
+    <a class="guide-deeplink" href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Instagramのデータダウンロードページを開く
+    </a>
     <div class="guide-card">
-      <p class="guide-deeplink-label">STEP 1 — まずはデータを取得</p>
-      <a class="guide-deeplink" href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Instagramのデータダウンロードページを開く
-      </a>
       <div class="guide-steps">
         <div class="guide-step"><div class="guide-step-num">1</div><div class="step-text">上のボタンからInstagramのデータダウンロードページを開きます</div></div>
         <div class="guide-step"><div class="guide-step-num">2</div><div class="step-text">「情報をダウンロード」または「Download your information」を選択<small>※ アカウントセンターにログインが必要です</small></div></div>
