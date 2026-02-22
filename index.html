@@ -120,27 +120,91 @@ button { font-family: inherit; }
 }
 .hero-pro-btn:hover { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.6); }
 
-.hero-copy {
-  text-align: center;
-  margin-top: clamp(120px, 22vh, 320px);
+/* ═══ HERO CENTER LOGO ANIMATION ═══ */
+.hero-center-logo {
+  display: flex; flex-direction: column; align-items: center;
+  margin-top: clamp(40px, 8vh, 100px);
 }
-.hero-copy h1 {
-  font-size: clamp(14px, 2.2vw, 19px); font-weight: 300;
-  letter-spacing: 0.35em; text-transform: uppercase;
-  color: rgba(255,255,255,0.45);
-  opacity: 0; animation: heroFadeUp 1.2s var(--ease-out) 0.8s forwards;
+.hero-center-logo svg.logo-svg {
+  overflow: visible;
+  filter: drop-shadow(0 0 40px rgba(255,255,255,0.03));
 }
-.hero-copy .tagline {
-  font-size: clamp(11px, 1.5vw, 14px); font-weight: 400;
-  letter-spacing: 0.15em; color: rgba(255,255,255,0.18);
-  margin-top: 14px;
-  opacity: 0; animation: heroFadeUp 1.2s var(--ease-out) 1.1s forwards;
+/* Orbit draw */
+@keyframes hOrbitDraw {
+  0% { stroke-dashoffset: 427.26; opacity: 0; }
+  5% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+/* Dot slide in */
+@keyframes hDotSlide {
+  0% { opacity: 0; transform: translate(-24px,-16px) scale(0); }
+  30% { opacity: 1; }
+  100% { opacity: 1; transform: translate(0,0) scale(1); }
+}
+/* Iris bounce */
+@keyframes hIrisScale {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.06); }
+  80% { transform: scale(0.98); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes hIrisScale2 {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.08); }
+  75% { transform: scale(0.97); }
+  100% { transform: scale(1); opacity: 1; }
+}
+/* Light sweep */
+@keyframes hLightSweep {
+  0% { opacity: 0; transform: rotate(-30deg); }
+  20% { opacity: 0.5; }
+  100% { opacity: 0; transform: rotate(330deg); }
+}
+/* Center dot */
+@keyframes hCenterDot {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+/* Connecting lines */
+@keyframes hLineFade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+/* Logo text: "mieta" */
+@keyframes hTextReveal {
+  0% { opacity: 0; transform: translateY(14px); letter-spacing: 0.35em; }
+  100% { opacity: 1; transform: translateY(0); letter-spacing: 0.14em; }
+}
+/* Subtitle: "The Reflection of Connection" */
+@keyframes hSubReveal {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+/* Pulse glow (after complete) */
+@keyframes hPulseGlow {
+  0%, 100% { filter: drop-shadow(0 0 0px transparent); }
+  50% { filter: drop-shadow(0 0 8px rgba(255,255,255,0.08)); }
+}
+
+.hero-logo-type {
+  font-size: clamp(28px, 5.5vw, 40px); font-weight: 600;
+  color: rgba(255,255,255,0.9); letter-spacing: 0.14em;
+  text-align: center; margin-top: 8px;
+  opacity: 0; animation: hTextReveal 1.0s var(--ease-out) 1.5s forwards;
+}
+.hero-logo-sub {
+  font-size: clamp(9px, 1.4vw, 12px); font-weight: 400;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(255,255,255,0.25); text-align: center;
+  margin-top: 10px;
+  opacity: 0; animation: hSubReveal 0.8s var(--ease-out) 1.9s forwards;
 }
 
 /* CTA on hero */
 .hero-cta {
-  margin-top: 40px; pointer-events: auto;
-  opacity: 0; animation: heroFadeUp 1s var(--ease-out) 1.5s forwards;
+  margin-top: 36px; pointer-events: auto;
+  opacity: 0; animation: heroFadeUp 1s var(--ease-out) 2.3s forwards;
 }
 .hero-cta-btn {
   display: inline-flex; align-items: center; gap: 8px;
@@ -923,9 +987,48 @@ a.user-name:hover { color: var(--accent); }
     </div>
     <button class="hero-pro-btn" onclick="Mieta.handleProButtonClick()">mieta+</button>
 
-    <div class="hero-copy">
-      <h1>The Reflection of Connection</h1>
-      <p class="tagline">つながりを、透明に。</p>
+    <div class="hero-center-logo">
+      <svg class="logo-svg" width="200" height="170" viewBox="0 0 200 170" fill="none"
+           style="overflow:visible;">
+        <!-- Outer Orbit Circle -->
+        <circle cx="100" cy="84" r="68" stroke="#FFF" stroke-width="1.6" fill="none"
+                stroke-dasharray="427.26" stroke-dashoffset="427.26"
+                style="animation:hOrbitDraw 1.0s var(--ease-out) 0s forwards;transform-origin:100px 84px;opacity:0;"/>
+        <!-- Orbit Dot (top-left) -->
+        <circle cx="52.4" cy="35" r="4.4" fill="#FFF"
+                style="animation:hDotSlide 0.8s var(--ease-out) 0.15s forwards;opacity:0;transform-origin:52.4px 35px;"/>
+        <!-- Decorative Dots -->
+        <circle cx="150.5" cy="134.5" r="2.64" fill="rgba(255,255,255,0.3)"
+                style="animation:hDotSlide 0.6s var(--ease-out) 0.30s forwards;opacity:0;"/>
+        <circle cx="54.3" cy="129.7" r="2.64" fill="rgba(255,255,255,0.3)"
+                style="animation:hDotSlide 0.6s var(--ease-out) 0.42s forwards;opacity:0;"/>
+        <circle cx="31" cy="58.9" r="2.64" fill="rgba(255,255,255,0.3)"
+                style="animation:hDotSlide 0.6s var(--ease-out) 0.54s forwards;opacity:0;"/>
+        <circle cx="144.6" cy="30.9" r="2.64" fill="rgba(255,255,255,0.3)"
+                style="animation:hDotSlide 0.6s var(--ease-out) 0.66s forwards;opacity:0;"/>
+        <!-- Connecting Lines -->
+        <line x1="150.5" y1="134.5" x2="54.3" y2="129.7" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"
+              style="animation:hLineFade 0.8s var(--ease-out) 0.5s forwards;opacity:0;"/>
+        <line x1="31" y1="58.9" x2="144.6" y2="30.9" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"
+              style="animation:hLineFade 0.8s var(--ease-out) 0.65s forwards;opacity:0;"/>
+        <!-- Inner Circle (Iris - outer) -->
+        <circle cx="100" cy="84" r="44" stroke="#FFF" stroke-width="1.92" fill="none"
+                style="animation:hIrisScale 0.9s var(--ease-out) 0.5s forwards;opacity:0;transform-origin:100px 84px;"/>
+        <!-- Inner Circle (Iris - inner, dashed) -->
+        <circle cx="100" cy="84" r="36" stroke="#FFF" stroke-width="1.28" fill="none"
+                stroke-dasharray="18 9"
+                style="animation:hIrisScale2 0.8s var(--ease-out) 0.65s forwards;opacity:0;transform-origin:100px 84px;"/>
+        <!-- Light Sweep (fan) -->
+        <path d="M 100 84 L 124 55.4 A 37.4 37.4 0 0 0 87.2 48.9 Z"
+              stroke="#FFF" stroke-width="0.96" fill="rgba(255,255,255,0.04)"
+              stroke-linecap="round"
+              style="animation:hLightSweep 0.9s var(--ease-out) 1.2s forwards;opacity:0;transform-origin:100px 84px;"/>
+        <!-- Center Dot -->
+        <circle cx="100" cy="84" r="5.28" fill="#FFF"
+                style="animation:hCenterDot 0.5s var(--ease-out) 0.8s forwards;opacity:0;transform-origin:100px 84px;"/>
+      </svg>
+      <div class="hero-logo-type">mieta</div>
+      <div class="hero-logo-sub">The Reflection of Connection</div>
     </div>
 
     <div class="hero-cta">
