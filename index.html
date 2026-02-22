@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>mieta — つながりを、透明に。</title>
+<meta name="description" content="Instagramのフォロー関係をブラウザだけで解析。データはどこにも送信されません。">
+<!-- OGP -->
+<meta property="og:title" content="mieta — つながりを、透明に。">
+<meta property="og:description" content="Instagramのフォロー関係を、あなたのブラウザだけで解析。フォロバされていない人が一目でわかる。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mieta">
+<meta name="twitter:description" content="つながりを、透明に。Instagramフォロー関係解析ツール。">
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231D1D1F'/><text x='50' y='68' font-family='system-ui' font-size='42' font-weight='600' fill='white' text-anchor='middle'>m</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231D1D1F'/><text x='50' y='68' font-family='system-ui' font-size='42' font-weight='600' fill='white' text-anchor='middle'>m</text></svg>">
+<link rel="manifest" href="manifest.json">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   mieta — Unified Design System
+   The Reflection Lens + Full Service App
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --white: #FFFFFF;
+  --off-white: #F5F5F7;
+  --jet: #1D1D1F;
+  --sub: #86868B;
+  --accent: #0071E3;
+  --border: rgba(0,0,0,0.06);
+  --border-light: rgba(255,255,255,0.5);
+  --glass: rgba(255,255,255,0.55);
+  --glass-strong: rgba(255,255,255,0.72);
+  --red: #FF3B30;
+  --orange: #FF9500;
+  --green: #34C759;
+  --purple: #5856D6;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.04);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.06);
+  --shadow-lg: 0 16px 56px -12px rgba(0,0,0,0.1);
+  --ease-out: cubic-bezier(.16,1,.3,1);
+  --ease-smooth: cubic-bezier(.4,0,.2,1);
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-family: var(--font); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
+body { overflow-x: hidden; position: relative; background: #000; color: var(--jet); }
+::selection { background: rgba(0,113,227,0.15); }
+input::placeholder { color: var(--sub); }
+button { font-family: inherit; }
+
+/* ═══ PHASE 1: DARK HERO (Lens Animation) ═══ */
+
+#hero-section {
+  position: relative; width: 100%; height: 100vh; height: 100dvh;
+  overflow: hidden; background: #000;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+#hero-section.hidden {
+  opacity: 0; transform: scale(0.98);
+  pointer-events: none; position: absolute;
+}
+
+#lens-canvas {
+  display: block; position: absolute; inset: 0; z-index: 1;
+}
+
+/* Hero overlay text */
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 10;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+/* Ensure all interactive children are tappable on mobile */
+.hero-overlay button, .hero-overlay a, .hero-overlay [onclick] {
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: rgba(255,255,255,0.1);
+  touch-action: manipulation;
+}
+.hero-logo {
+  position: absolute; top: max(20px, env(safe-area-inset-top)); left: max(24px, env(safe-area-inset-left));
+  font-size: 20px; font-weight: 600; letter-spacing: -0.03em;
+  color: rgba(255,255,255,0.3);
+  opacity: 0; animation: heroFadeIn 1s ease 0.3s forwards;
+}
+.hero-pro-btn {
+  position: absolute; top: max(18px, env(safe-area-inset-top)); right: max(24px, env(safe-area-inset-right));
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.35);
+  padding: 5px 14px; border-radius: 100px;
+  border: 1.5px solid rgba(255,255,255,0.15); background: none;
+  cursor: pointer; letter-spacing: 0.04em; pointer-events: auto;
+  opacity: 0; animation: heroFadeIn 1s ease 0.5s forwards;
+  transition: all 0.3s ease;
+}
+.hero-pro-btn:hover { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.6); }
+
+.hero-copy {
+  text-align: center;
+  margin-top: clamp(120px, 22vh, 320px);
+}
+.hero-copy h1 {
+  font-size: clamp(14px, 2.2vw, 19px); font-weight: 300;
+  letter-spacing: 0.35em; text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  opacity: 0; animation: heroFadeUp 1.2s var(--ease-out) 0.8s forwards;
+}
+.hero-copy .tagline {
+  font-size: clamp(11px, 1.5vw, 14px); font-weight: 400;
+  letter-spacing: 0.15em; color: rgba(255,255,255,0.18);
+  margin-top: 14px;
+  opacity: 0; animation: heroFadeUp 1.2s var(--ease-out) 1.1s forwards;
+}
+
+/* CTA on hero */
+.hero-cta {
+  margin-top: 40px; pointer-events: auto;
+  opacity: 0; animation: heroFadeUp 1s var(--ease-out) 1.5s forwards;
+}
+.hero-cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: 100px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  color: rgba(255,255,255,0.8); font-size: 15px; font-weight: 400;
+  cursor: pointer; letter-spacing: 0.02em;
+  transition: all 0.4s ease;
+  /* Mobile touch */
+  -webkit-tap-highlight-color: rgba(255,255,255,0.1);
+  touch-action: manipulation;
+  position: relative; z-index: 20;
+}
+.hero-cta-btn:hover {
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.2);
+  color: #fff; transform: translateY(-1px);
+}
+.hero-cta-btn svg { transition: transform 0.3s ease; }
+.hero-cta-btn:hover svg { transform: translateX(3px); }
+
+/* Scroll hint */
+.hero-scroll-hint {
+  position: absolute; bottom: clamp(24px, 4vh, 40px); left: 50%;
+  transform: translateX(-50%);
+  opacity: 0; animation: heroFadeIn 1.5s ease 2.5s forwards;
+}
+
+/* Hero keyframes */
+@keyframes heroFadeIn { from { opacity:0 } to { opacity:1 } }
+@keyframes heroFadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
+
+/* ═══ PHASE 2: LIGHT APP SCREENS ═══ */
+
+#app-section {
+  position: relative; z-index: 20;
+  background: var(--white);
+  min-height: 100vh; min-height: 100dvh;
+  display: none;
+  transition: opacity 0.6s ease;
+}
+#app-section.active { display: block; }
+
+/* Background blobs for light screens */
+#bg-blobs {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  transition: filter 1.2s var(--ease-smooth);
+}
+#bg-blobs.active { filter: blur(4px) brightness(1.06); }
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px); will-change: transform;
+  animation: blobDrift var(--dur) ease-in-out var(--delay) infinite alternate;
+}
+@keyframes blobDrift {
+  0%   { transform: translate(0,0) scale(1); }
+  33%  { transform: translate(var(--tx1), var(--ty1)) scale(var(--s1)); }
+  66%  { transform: translate(var(--tx2), var(--ty2)) scale(var(--s2)); }
+  100% { transform: translate(var(--tx3), var(--ty3)) scale(var(--s3)); }
+}
+#noise-overlay {
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none; opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+  display: none;
+}
+#noise-overlay.active { display: block; }
+
+/* ═══ NAVBAR (Light Mode) ═══ */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 52px; display: none; align-items: center;
+  padding: 0 max(20px, env(safe-area-inset-left));
+  transition: all 0.5s var(--ease-smooth);
+  background: rgba(255,255,255,0.01);
+  border-bottom: 0.5px solid transparent;
+}
+#navbar.active { display: flex; }
+#navbar.scrolled {
+  background: var(--glass-strong);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom-color: var(--border);
+}
+.nav-inner {
+  max-width: 1080px; width: 100%; margin: 0 auto; padding: 0 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-size: 20px; font-weight: 600; letter-spacing: -0.03em;
+  color: var(--jet); background: none; border: none; cursor: pointer; padding: 0;
+}
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.nav-link {
+  font-size: 13px; color: var(--sub); background: none; border: none;
+  cursor: pointer; padding: 4px 0; letter-spacing: 0.01em; transition: color 0.2s;
+}
+.nav-link:hover { color: var(--jet); }
+.nav-pro {
+  font-size: 12px; font-weight: 600; color: var(--accent);
+  padding: 5px 14px; border-radius: 100px;
+  border: 1.5px solid var(--accent); background: none;
+  cursor: pointer; letter-spacing: 0.04em; transition: all 0.3s ease;
+}
+.nav-pro:hover { background: var(--accent); color: #fff; }
+
+/* ═══ SCREEN SYSTEM ═══ */
+.screen {
+  display: none; min-height: 100vh; min-height: 100dvh;
+  position: relative; z-index: 2;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.screen.visible { opacity: 1; transform: translateY(0); }
+
+/* ═══ SCREEN: GUIDE ═══ */
+#screen-guide { padding: 100px 24px 60px; min-height: 100vh; justify-content: flex-start; }
+.guide-header { text-align: center; margin-bottom: 48px; padding-top: 40px; }
+.guide-header h1 {
+  font-size: clamp(36px, 8vw, 56px); font-weight: 700;
+  letter-spacing: -0.04em; line-height: 1.08;
+  background: linear-gradient(180deg, var(--jet) 0%, var(--jet) 50%, rgba(29,29,31,0.35) 85%, rgba(0,113,227,0.2) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.guide-header p { font-size: 17px; font-weight: 300; color: var(--sub); margin-top: 16px; line-height: 1.7; }
+
+.guide-card {
+  width: 100%; max-width: 560px;
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--border-light);
+  box-shadow: var(--shadow-md); overflow: hidden;
+}
+.guide-deeplink {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  color: #fff; text-decoration: none; font-size: 15px; font-weight: 500;
+  transition: opacity 0.2s;
+}
+.guide-deeplink:hover { opacity: 0.9; }
+.guide-deeplink svg { flex-shrink: 0; }
+.guide-steps { padding: 8px 0; }
+.guide-step {
+  display: flex; gap: 16px; padding: 18px 24px;
+  border-bottom: 0.5px solid var(--border); align-items: flex-start;
+}
+.guide-step:last-child { border-bottom: none; }
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--off-white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600; color: var(--jet); flex-shrink: 0;
+}
+.step-text { font-size: 14px; color: var(--jet); line-height: 1.6; padding-top: 3px; }
+.step-text small { display: block; font-size: 12px; color: var(--sub); margin-top: 2px; }
+.guide-next {
+  width: 100%; max-width: 560px; margin-top: 24px; padding: 16px;
+  border-radius: var(--radius-md); background: var(--jet); color: #fff;
+  border: none; font-size: 16px; font-weight: 500; cursor: pointer;
+  transition: all 0.3s ease;
+}
+.guide-next:hover { background: #333; transform: translateY(-1px); }
+
+/* ═══ SCREEN: UPLOAD ═══ */
+#screen-upload { padding: 100px 24px 60px; }
+.upload-header { text-align: center; margin-bottom: 48px; }
+.upload-header h2 { font-size: clamp(28px, 6vw, 40px); font-weight: 600; letter-spacing: -0.03em; color: var(--jet); }
+.upload-header p { font-size: 15px; color: var(--sub); margin-top: 10px; }
+
+.upload-zone {
+  position: relative; width: 100%; max-width: 520px;
+  padding: 52px 40px; border-radius: var(--radius-lg);
+  cursor: pointer; overflow: hidden; text-align: center;
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 2px dashed rgba(0,0,0,0.08);
+  box-shadow: inset 0 0 0 1px var(--border-light), var(--shadow-sm);
+  transition: all 0.5s var(--ease-smooth);
+}
+.upload-zone::before {
+  content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  opacity: 0.5; transition: opacity 0.4s;
+}
+.upload-zone:hover {
+  background: rgba(255,255,255,0.65);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.7), var(--shadow-md);
+  border-color: rgba(0,0,0,0.05);
+}
+.upload-zone.dragging {
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-color: rgba(0,113,227,0.3);
+  box-shadow: inset 0 0 0 1.5px rgba(0,113,227,0.25), 0 24px 80px -12px rgba(0,113,227,0.12);
+  transform: scale(1.01);
+}
+.upload-zone.dragging::before { opacity: 1; }
+.upload-zone.dragging .upload-icon-wrap { animation: gentleFloat 2.5s ease-in-out infinite; }
+.upload-zone.dragging .upload-icon-wrap svg { stroke: var(--accent); }
+.upload-icon-wrap {
+  width: 52px; height: 52px; border-radius: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.03); margin-bottom: 18px; transition: background 0.4s;
+}
+.upload-zone.dragging .upload-icon-wrap { background: rgba(0,113,227,0.08); }
+.upload-title { font-size: 17px; font-weight: 400; color: var(--jet); transition: color 0.3s; }
+.upload-zone.dragging .upload-title { color: var(--accent); }
+.upload-sub { font-size: 13px; color: var(--sub); margin-top: 6px; }
+.upload-formats {
+  display: inline-block; margin-top: 18px; font-size: 11px; color: var(--sub);
+  padding: 4px 14px; border-radius: 100px; background: rgba(0,0,0,0.02);
+}
+#file-input { display: none; }
+
+/* OS Guide */
+.os-guide { width: 100%; max-width: 520px; margin-top: 28px; }
+.os-tabs { display: flex; background: var(--off-white); border-radius: var(--radius-sm); padding: 3px; margin-bottom: 16px; }
+.os-tab {
+  flex: 1; padding: 10px 0; font-size: 14px; font-weight: 500;
+  border: none; background: transparent; cursor: pointer;
+  border-radius: 10px; color: var(--sub); transition: all 0.25s ease;
+}
+.os-tab.active { background: #fff; color: var(--jet); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.os-hint { font-size: 13px; color: var(--sub); line-height: 1.7; padding: 16px 20px; border-radius: var(--radius-sm); background: var(--off-white); }
+.os-hint strong { color: var(--jet); font-weight: 500; }
+.security-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 28px; padding: 8px 18px; border-radius: 100px;
+  background: rgba(255,255,255,0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255,255,255,0.6);
+}
+.security-badge svg { flex-shrink: 0; }
+.security-badge span { font-size: 12px; color: var(--sub); }
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-bottom: 32px; padding: 0; background: none; border: none;
+  cursor: pointer; font-size: 14px; color: var(--accent);
+}
+.back-link:hover { text-decoration: underline; }
+.error-msg {
+  width: 100%; max-width: 520px; margin-top: 16px; padding: 16px 20px;
+  border-radius: var(--radius-sm); background: rgba(255,59,48,0.06);
+  font-size: 14px; color: var(--red); line-height: 1.6; display: none;
+}
+.error-msg.show { display: block; animation: fadeSlide 0.4s var(--ease-out); }
+
+/* ═══ SCREEN: RESULTS ═══ */
+#screen-results { padding: 100px 24px 60px; justify-content: flex-start; align-items: stretch; }
+.results-inner { max-width: 720px; width: 100%; margin: 0 auto; }
+.results-header { text-align: center; margin-bottom: 40px; padding-top: 32px; }
+.results-header h2 { font-size: clamp(28px, 5vw, 42px); font-weight: 600; letter-spacing: -0.03em; color: var(--jet); }
+.results-header p { font-size: 15px; color: var(--sub); margin-top: 8px; }
+
+/* Stats Grid */
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 36px; }
+@media (min-width: 600px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+.stat-card {
+  position: relative; padding: 24px 20px; border-radius: var(--radius-md); overflow: hidden;
+  background: var(--off-white); transition: all 0.4s var(--ease-smooth); cursor: pointer;
+}
+.stat-card:hover { background: var(--white); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.stat-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--sub); }
+.stat-value { font-size: clamp(32px, 5vw, 44px); font-weight: 300; letter-spacing: -0.03em; color: var(--jet); margin-top: 8px; line-height: 1; }
+.stat-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; opacity: 0.5; }
+
+/* Tabs */
+.result-tabs { display: flex; background: var(--off-white); border-radius: var(--radius-sm); padding: 3px; margin-bottom: 20px; }
+.result-tab {
+  flex: 1; padding: 10px 6px; border: none; background: transparent;
+  cursor: pointer; font-size: 13px; font-weight: 500;
+  color: var(--sub); border-radius: 10px; transition: all 0.25s ease; white-space: nowrap;
+}
+.result-tab.active { background: #fff; color: var(--jet); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+.tab-count {
+  display: inline-block; margin-left: 4px; font-size: 11px; font-weight: 600;
+  padding: 1px 6px; border-radius: 100px; background: rgba(0,0,0,0.05); color: var(--sub);
+}
+.result-tab.active .tab-count { background: rgba(0,113,227,0.1); color: var(--accent); }
+
+/* Toolbar */
+.list-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.search-wrap { flex: 1; min-width: 160px; position: relative; }
+.search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+.search-input {
+  width: 100%; padding: 10px 16px 10px 36px; font-size: 14px;
+  border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-sm);
+  background: var(--off-white); color: var(--jet); outline: none; font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+}
+.search-input:focus { border-color: var(--accent); background: #fff; }
+.sort-btn, .copy-btn, .share-btn {
+  padding: 9px 14px; border-radius: var(--radius-sm);
+  border: 1px solid rgba(0,0,0,0.06); background: var(--off-white); cursor: pointer;
+  font-size: 12px; font-weight: 500; color: var(--sub);
+  display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; white-space: nowrap;
+}
+.sort-btn:hover, .copy-btn:hover, .share-btn:hover { background: #fff; border-color: rgba(0,0,0,0.1); color: var(--jet); }
+
+/* User List */
+.user-list { padding: 0; }
+.user-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 0.5px solid var(--border);
+  animation: fadeSlide 0.3s var(--ease-out) both;
+}
+.user-row:last-child { border-bottom: none; }
+.user-info { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 14px; font-weight: 500; flex-shrink: 0;
+}
+.user-name-wrap { min-width: 0; }
+.user-name {
+  font-size: 15px; color: var(--jet); text-decoration: none;
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color 0.2s;
+}
+a.user-name:hover { color: var(--accent); }
+.user-date { font-size: 12px; color: var(--sub); margin-top: 1px; }
+.user-actions { display: flex; gap: 2px; opacity: 0; transition: opacity 0.2s; }
+.user-row:hover .user-actions { opacity: 1; }
+.user-action-btn { background: none; border: none; cursor: pointer; padding: 6px; border-radius: 8px; display: flex; transition: background 0.2s; }
+.user-action-btn:hover { background: rgba(0,0,0,0.04); }
+.user-row.locked .user-name { filter: blur(8px); pointer-events: none; }
+.user-row.locked .user-date { filter: blur(6px); }
+.user-row.locked .user-actions { display: none; }
+
+/* Premium Banner */
+.premium-banner {
+  display: none; margin-top: 12px; padding: 28px 24px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(0,113,227,0.04), rgba(88,86,214,0.04));
+  border: 1px solid rgba(0,113,227,0.1); text-align: center;
+}
+.premium-banner.show { display: block; animation: fadeSlide 0.5s var(--ease-out); }
+.premium-banner h4 { font-size: 17px; font-weight: 600; color: var(--jet); }
+.premium-banner p { font-size: 13px; color: var(--sub); margin-top: 6px; line-height: 1.6; }
+.premium-buy {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 16px; padding: 12px 28px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  color: #fff; border: none; cursor: pointer; font-size: 15px; font-weight: 500;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.premium-buy:hover { opacity: 0.9; transform: translateY(-1px); }
+.premium-price { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; }
+
+/* ═══ OVERLAYS ═══ */
+
+/* Analyzing */
+#analyzing-overlay {
+  display: none; position: fixed; inset: 0; z-index: 300;
+  align-items: center; justify-content: center; flex-direction: column;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(40px) saturate(180%); -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+#analyzing-overlay.show { display: flex; animation: fadeIn 0.5s ease; }
+.analyzing-bar { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.04); }
+.analyzing-bar-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--purple)); transition: width 0.5s var(--ease-smooth); }
+.analyzing-status { font-size: 14px; color: var(--sub); letter-spacing: 0.03em; animation: subtlePulse 2.5s ease-in-out infinite; }
+.analyzing-pct { font-size: 56px; font-weight: 200; color: var(--jet); letter-spacing: -0.04em; margin-top: 10px; }
+.analyzing-pct span { font-size: 24px; font-weight: 300; color: var(--sub); }
+
+/* Unlock Modal */
+#unlock-modal { display: none; position: fixed; inset: 0; z-index: 400; align-items: center; justify-content: center; }
+#unlock-modal.show { display: flex; animation: fadeIn 0.3s ease; }
+.unlock-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.unlock-card {
+  position: relative; z-index: 1;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+  border-radius: 24px; padding: 48px 40px; max-width: 400px; width: 90%;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.12); text-align: center;
+}
+.unlock-close { position: absolute; top: 16px; right: 16px; background: none; border: none; cursor: pointer; padding: 4px; color: var(--sub); }
+.unlock-badge { display: inline-block; padding: 6px 14px; border-radius: 100px; background: linear-gradient(135deg, var(--accent), var(--purple)); color: #fff; font-size: 13px; font-weight: 600; }
+.unlock-card h3 { font-size: 24px; font-weight: 600; margin-top: 20px; color: var(--jet); }
+.unlock-card > p { font-size: 14px; color: var(--sub); margin-top: 8px; line-height: 1.6; }
+.unlock-features { margin-top: 24px; text-align: left; }
+.unlock-feature { display: flex; gap: 12px; align-items: center; padding: 11px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; color: var(--jet); }
+.unlock-feature:last-child { border-bottom: none; }
+.unlock-feature-icon { font-size: 17px; flex-shrink: 0; }
+.unlock-buy-btn {
+  width: 100%; margin-top: 28px; padding: 14px 0;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  color: #fff; border: none; border-radius: 14px;
+  font-size: 16px; font-weight: 500; cursor: pointer; transition: opacity 0.2s;
+}
+.unlock-buy-btn:hover { opacity: 0.92; }
+.unlock-note { font-size: 12px; color: var(--sub); margin-top: 10px; }
+
+/* Toast */
+#toast {
+  position: fixed; bottom: 32px; left: 50%; z-index: 500;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--jet); color: #fff; padding: 10px 24px; border-radius: 100px;
+  font-size: 13px; font-weight: 500; pointer-events: none; opacity: 0; transition: all 0.3s ease;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Footer */
+.privacy-footer { text-align: center; padding: 48px 24px 40px; margin-top: 60px; border-top: 0.5px solid var(--border); }
+.privacy-footer .badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.privacy-footer .badge span { font-size: 12px; font-weight: 600; color: var(--jet); letter-spacing: 0.06em; }
+.privacy-footer p { font-size: 13px; color: var(--sub); max-width: 460px; margin: 0 auto; line-height: 1.8; }
+.privacy-footer .copy { font-size: 11px; color: rgba(0,0,0,0.15); margin-top: 28px; }
+.reset-btn { margin-top: 8px; padding: 0; background: none; border: none; cursor: pointer; font-size: 13px; color: var(--accent); }
+.reset-btn:hover { text-decoration: underline; }
+
+/* ═══ KEYFRAMES ═══ */
+@keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+@keyframes fadeSlide { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+@keyframes gentleFloat { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-6px) } }
+@keyframes subtlePulse { 0%,100% { opacity:0.5 } 50% { opacity:1 } }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 480px) {
+  .stats-grid { gap: 8px; }
+  .stat-card { padding: 18px 14px; }
+  .stat-value { font-size: 28px; }
+  .sort-btn span.label, .copy-btn span.label, .share-btn span.label { display: none; }
+  .user-actions { opacity: 1; }
+  .guide-step { padding: 14px 18px; }
+  .upload-zone { padding: 40px 24px; }
+  .unlock-card { padding: 36px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HERO: The Reflection Lens
+     ═══════════════════════════════════════ -->
+<section id="hero-section">
+  <canvas id="lens-canvas"></canvas>
+
+  <div class="hero-overlay">
+    <span class="hero-logo">mieta</span>
+    <button class="hero-pro-btn" onclick="Mieta.openUnlock()">mieta+</button>
+
+    <div class="hero-copy">
+      <h1>The Reflection of Connection</h1>
+      <p class="tagline">つながりを、透明に。</p>
+    </div>
+
+    <div class="hero-cta">
+      <button class="hero-cta-btn" onclick="Mieta.enterApp()" ontouchend="this.click()">
+        フォロー関係を解析する
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <div style="position:absolute;bottom:clamp(60px,10vh,100px);left:50%;transform:translateX(-50%);font-size:9px;color:rgba(255,255,255,0.08);letter-spacing:0.1em;pointer-events:none" id="hero-version"></div>
+    <div class="hero-scroll-hint">
+      <svg width="20" height="28" viewBox="0 0 20 28" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5">
+        <rect x="1" y="1" width="18" height="26" rx="9"/>
+        <line x1="10" y1="7" x2="10" y2="12" stroke-linecap="round">
+          <animate attributeName="y1" values="7;10;7" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="12;15;12" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+        </line>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     APP: Service Screens
+     ═══════════════════════════════════════ -->
+<div id="app-section">
+  <!-- Background -->
+  <div id="bg-blobs">
+    <div class="blob" style="width:680px;height:680px;left:-10%;top:-5%;background:rgba(0,113,227,0.06);--dur:22s;--delay:0s;--tx1:30px;--ty1:-40px;--s1:1.08;--tx2:-20px;--ty2:20px;--s2:0.95;--tx3:15px;--ty3:-25px;--s3:1.04"></div>
+    <div class="blob" style="width:520px;height:520px;right:-8%;top:10%;background:rgba(88,86,214,0.05);--dur:18s;--delay:2s;--tx1:-40px;--ty1:30px;--s1:1.1;--tx2:25px;--ty2:-15px;--s2:0.96;--tx3:-10px;--ty3:20px;--s3:1.02"></div>
+    <div class="blob" style="width:800px;height:800px;left:20%;bottom:-20%;background:rgba(0,113,227,0.04);--dur:26s;--delay:4s;--tx1:20px;--ty1:35px;--s1:0.92;--tx2:-35px;--ty2:-20px;--s2:1.06;--tx3:10px;--ty3:15px;--s3:1"></div>
+    <div class="blob" style="width:400px;height:400px;right:15%;bottom:20%;background:rgba(175,130,255,0.05);--dur:20s;--delay:1s;--tx1:-25px;--ty1:-30px;--s1:1.05;--tx2:20px;--ty2:25px;--s2:0.97;--tx3:-15px;--ty3:10px;--s3:1.03"></div>
+  </div>
+  <div id="noise-overlay"></div>
+
+  <!-- Navbar -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <button class="nav-logo" onclick="Mieta.reset()">mieta</button>
+      <div class="nav-right">
+        <button class="nav-link" onclick="Mieta.goToScreen('guide')">使い方</button>
+        <button class="nav-pro" onclick="Mieta.openUnlock()">mieta+</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Screen: Guide -->
+  <div id="screen-guide" class="screen">
+    <div class="guide-header">
+      <h1>つながりを、<br>透明に。</h1>
+      <p>Instagramのフォロー関係を、あなたのブラウザだけで解析。</p>
+    </div>
+    <div class="guide-card">
+      <a class="guide-deeplink" href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Instagramのデータダウンロードページを開く
+      </a>
+      <div class="guide-steps">
+        <div class="guide-step"><div class="step-num">1</div><div class="step-text">上のリンクからInstagramのデータダウンロードページを開きます</div></div>
+        <div class="guide-step"><div class="step-num">2</div><div class="step-text">「情報をダウンロード」または「Download your information」を選択<small>※ アカウントセンターにログインが必要です</small></div></div>
+        <div class="guide-step"><div class="step-num">3</div><div class="step-text">対象アカウントを選択し「一部の情報」を選びます</div></div>
+        <div class="guide-step"><div class="step-num">4</div><div class="step-text">「フォロワーとフォロー中」のみにチェックを入れます<small>※ 必要最小限のデータだけで解析できます</small></div></div>
+        <div class="guide-step"><div class="step-num">5</div><div class="step-text">形式は必ず <strong>JSON</strong> を選択してダウンロードをリクエスト</div></div>
+        <div class="guide-step"><div class="step-num">6</div><div class="step-text">メールでZIPファイルを受信したら、次のステップへ進みます<small>※ 通常数分〜48時間で届きます</small></div></div>
+      </div>
+    </div>
+    <button class="guide-next" onclick="Mieta.goToScreen('upload')">ZIPファイルをアップロードする →</button>
+  </div>
+
+  <!-- Screen: Upload -->
+  <div id="screen-upload" class="screen">
+    <button class="back-link" onclick="Mieta.goToScreen('guide')">
+      <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 1L1 7l6 6"/></svg>
+      ガイドに戻る
+    </button>
+    <div class="upload-header">
+      <h2>データをアップロード</h2>
+      <p>Instagramから受け取ったZIPファイルを選択してください</p>
+    </div>
+    <div class="upload-zone" id="upload-zone">
+      <input type="file" id="file-input" accept=".zip,.json">
+      <div class="upload-icon-wrap">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4M4 14v4a2 2 0 002 2h12a2 2 0 002-2v-4"/></svg>
+      </div>
+      <p class="upload-title">ZIPファイルをドロップ</p>
+      <p class="upload-sub">またはクリックして選択</p>
+      <span class="upload-formats">Instagram JSON形式 (.zip / .json)</span>
+    </div>
+    <div class="error-msg" id="error-msg"></div>
+    <div class="os-guide">
+      <div class="os-tabs">
+        <button class="os-tab active" data-os="iphone" onclick="Mieta.switchOS('iphone')">iPhone</button>
+        <button class="os-tab" data-os="android" onclick="Mieta.switchOS('android')">Android</button>
+      </div>
+      <div class="os-hint" id="os-hint-iphone"><strong>ファイルの場所（iPhone）</strong><br>メールアプリでZIPを受信 → 添付ファイルを長押し →「"ファイル"に保存」。「ブラウズ」タブから保存先を確認してください。</div>
+      <div class="os-hint" id="os-hint-android" style="display:none"><strong>ファイルの場所（Android）</strong><br>GmailでZIPを受信 → 添付ファイルをタップしてダウンロード。「ファイル」アプリ →「ダウンロード」フォルダに保存されています。</div>
+    </div>
+    <div class="security-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>完全にブラウザ内で処理。データはどこにも送信されません。</span>
+    </div>
+  </div>
+
+  <!-- Screen: Results -->
+  <div id="screen-results" class="screen">
+    <div class="results-inner">
+      <div class="results-header">
+        <h2>解析が完了しました</h2>
+        <p id="results-summary"></p>
+        <button class="reset-btn" onclick="Mieta.reset()">新しいファイルを解析</button>
+      </div>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="result-tabs" id="result-tabs"></div>
+      <div class="list-toolbar">
+        <div class="search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="search-input" id="search-input" placeholder="ユーザー名を検索…" oninput="Mieta.renderList()">
+        </div>
+        <button class="sort-btn" id="sort-btn" onclick="Mieta.cycleSort()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 6h18M3 12h12M3 18h6"/></svg>
+          <span class="label">名前順</span>
+        </button>
+        <button class="copy-btn" onclick="Mieta.copyList()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span class="label">コピー</span>
+        </button>
+        <button class="share-btn" onclick="Mieta.shareList()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v6a2 2 0 002 2h12a2 2 0 002-2v-6M12 3v12M12 3l4 4M12 3L8 7"/></svg>
+          <span class="label">共有</span>
+        </button>
+      </div>
+      <div class="user-list" id="user-list"></div>
+      <div class="premium-banner" id="premium-banner">
+        <h4>すべてのユーザーを表示</h4>
+        <p id="premium-desc"></p>
+        <button class="premium-buy" onclick="Mieta.openUnlock()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+          mieta+ でロック解除
+        </button>
+        <p class="premium-price">¥330（税込）· 買い切り</p>
+      </div>
+      <div class="privacy-footer">
+        <div class="badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0071E3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Zero-Knowledge Design</span>
+        </div>
+        <p>mietaは、あなたのInstagramデータをサーバーに保存・送信・閲覧することは物理的に不可能です。すべての計算は、今お使いのブラウザ内で完結しました。</p>
+        <p class="copy">© 2026 mieta. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlays -->
+<div id="analyzing-overlay">
+  <div class="analyzing-bar"><div class="analyzing-bar-fill" id="analyzing-bar-fill"></div></div>
+  <p class="analyzing-status" id="analyzing-status">準備中…</p>
+  <p class="analyzing-pct"><span id="analyzing-pct-num">0</span><span>%</span></p>
+</div>
+
+<div id="unlock-modal">
+  <div class="unlock-backdrop" onclick="Mieta.closeUnlock()"></div>
+  <div class="unlock-card">
+    <button class="unlock-close" onclick="Mieta.closeUnlock()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="unlock-badge">mieta+</div>
+    <h3>すべてのつながりを見る</h3>
+    <p>無料版では各カテゴリ3名までの表示です。<br>mieta+ ですべてのリストをロック解除。</p>
+    <div class="unlock-features">
+      <div class="unlock-feature"><span class="unlock-feature-icon">🔓</span>全ユーザーリストを表示</div>
+      <div class="unlock-feature"><span class="unlock-feature-icon">📋</span>リスト全体のコピー・共有</div>
+      <div class="unlock-feature"><span class="unlock-feature-icon">🔍</span>完全な検索・ソート機能</div>
+      <div class="unlock-feature"><span class="unlock-feature-icon">♾️</span>買い切り — 追加料金なし</div>
+    </div>
+    <button class="unlock-buy-btn" onclick="Mieta.purchasePremium()">¥330 で購入する</button>
+    <p class="unlock-note">※ 現在はデモモードです。実際の決済は発生しません。</p>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════
+     JavaScript: Lens Animation + Full Service Logic
+     ═══════════════════════════════════════════════ -->
+<script>
+const Mieta = (function(){
+  'use strict';
+
+  /* ═══ CONSTANTS ═══ */
+  const BUILD_VERSION = 'v4.0-2026-02-22';
+  const FREE_LIMIT = 3;
+  const PREMIUM_KEY = 'mieta_premium';
+  const SORT_MODES = ['name','newest','oldest'];
+  const SORT_LABELS = { name:'名前順', newest:'新しい順', oldest:'古い順' };
+  const CATEGORIES = [
+    { key:'unrequited', label:'フォロバなし', color:'#FF3B30', desc:'あなたがフォロー中だが、相手はしていない' },
+    { key:'fans',       label:'片思われ',     color:'#FF9500', desc:'相手があなたをフォロー中だが、あなたはしていない' },
+    { key:'mutual',     label:'相互フォロー', color:'#34C759', desc:'お互いにフォロー中' },
+  ];
+  const DUMMY_NAMES = ['?????_user','???_private','????_ig','?????_2024','???_gram','????_snap','?????_me','???_daily'];
+
+  /* ═══ STATE ═══ */
+  let state = {
+    phase: 'hero',        // hero | app
+    screen: 'guide',
+    data: null,
+    activeTab: 'unrequited',
+    sortMode: 'name',
+    isPremium: localStorage.getItem(PREMIUM_KEY) === 'true',
+  };
+
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => document.querySelectorAll(s);
+
+  /* ═══ UTILITIES ═══ */
+  function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+  function normalizeUsername(u){ return (u||'').trim().toLowerCase(); }
+  function deduplicateUsers(users){
+    const seen = new Set();
+    return users.filter(u => { const k=normalizeUsername(u.username); if(seen.has(k)) return false; seen.add(k); return true; });
+  }
+  function avatarColor(name){
+    let h=0; for(let i=0;i<name.length;i++) h=name.charCodeAt(i)+((h<<5)-h);
+    return `hsl(${Math.abs(h)%360},55%,65%)`;
+  }
+  function formatDate(ts){
+    if(!ts) return '';
+    return new Date(ts*1000).toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'});
+  }
+  function toast(msg){
+    const el=$('#toast'); el.textContent=msg; el.classList.add('show');
+    setTimeout(()=>el.classList.remove('show'),2200);
+  }
+  function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+  /* ═══════════════════════════════════════════
+     THE REFLECTION LENS — Canvas Animation
+     ═══════════════════════════════════════════ */
+  const LENS = {
+    NODE_COUNT: 28, EDGE_MAX_DIST: 180,
+    ORBIT_BASE: 260, ORBIT_VAR: 140,
+    SPD_MIN: 0.0003, SPD_MAX: 0.0012,
+    LENS_R_RATIO: 0.18, LENS_MIN: 120, LENS_MAX: 220,
+    MAGNIFY: 1.22, DISTORT: 0.08,
+    EDGE_OUT_A: 0.06, EDGE_IN_A: 0.35,
+    NODE_OUT_A: 0.18, NODE_IN_A: 0.95,
+    BREATH_T: 12000, BREATH_S: 0.04,
+    ROT_SPD: 0.00004, GLOW: 6,
+  };
+
+  let canvas, ctx, W, H, CX, CY, LENS_R, dpr, nodes=[], lensAnimId=null, lensStart=null;
+
+  function initLens(){
+    canvas = $('#lens-canvas');
+    ctx = canvas.getContext('2d');
+    resizeLens();
+    window.addEventListener('resize', resizeLens);
+
+    for(let i=0; i<LENS.NODE_COUNT; i++){
+      nodes.push({
+        angle: Math.random()*Math.PI*2,
+        radius: LENS.ORBIT_BASE + (Math.random()-0.5)*2*LENS.ORBIT_VAR,
+        speed: (LENS.SPD_MIN + Math.random()*(LENS.SPD_MAX-LENS.SPD_MIN)) * (Math.random()>0.5?1:-1),
+        phase: Math.random()*Math.PI*2,
+        eccX: 0.7+Math.random()*0.6, eccY: 0.7+Math.random()*0.6,
+        drift: (Math.random()-0.5)*0.15,
+        size: 2+Math.random()*2.5,
+        x:0, y:0
+      });
+    }
+    lensAnimId = requestAnimationFrame(renderLens);
+  }
+
+  function resizeLens(){
+    dpr = window.devicePixelRatio||1;
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    CX=W/2; CY=H/2;
+    LENS_R = Math.max(LENS.LENS_MIN, Math.min(LENS.LENS_MAX, Math.min(W,H)*LENS.LENS_R_RATIO));
+  }
+
+  function renderLens(ts){
+    if(!lensStart) lensStart=ts;
+    const t = ts-lensStart;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+
+    // Vignette
+    const vig=ctx.createRadialGradient(CX,CY,0,CX,CY,Math.max(W,H)*0.7);
+    vig.addColorStop(0,'rgba(20,20,25,0)'); vig.addColorStop(1,'rgba(0,0,0,0.4)');
+    ctx.fillStyle=vig; ctx.fillRect(0,0,W,H);
+
+    const bS = 1+Math.sin(t/LENS.BREATH_T*Math.PI*2)*LENS.BREATH_S;
+    const gR = t*LENS.ROT_SPD;
+
+    // Update positions
+    for(const n of nodes){
+      const a = n.angle + n.speed*t + Math.sin(t*0.0002+n.phase)*0.3;
+      const r = n.radius + Math.sin(t*0.0004+n.phase)*20;
+      const rx = CX + Math.cos(a)*r*n.eccX;
+      const ry = CY + Math.sin(a)*r*n.eccY;
+      const dx=rx-CX, dy=ry-CY;
+      const cos=Math.cos(gR), sin=Math.sin(gR);
+      n.x = CX+(dx*cos-dy*sin)*bS;
+      n.y = CY+(dx*sin+dy*cos)*bS;
+    }
+
+    const cR = LENS_R*bS;
+
+    // OUTER (clipped outside lens)
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0,0,W,H); ctx.arc(CX,CY,cR,0,Math.PI*2,true); ctx.clip();
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<LENS.EDGE_MAX_DIST){
+          ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y);
+          ctx.strokeStyle=`rgba(255,255,255,${LENS.EDGE_OUT_A*(1-d/LENS.EDGE_MAX_DIST)})`;
+          ctx.lineWidth=0.5; ctx.stroke();
+        }
+      }
+    }
+    for(const n of nodes){
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.size,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${LENS.NODE_OUT_A})`; ctx.fill();
+    }
+    ctx.restore();
+
+    // LENS RING
+    const rA = 0.12+Math.sin(t*0.001)*0.04;
+    const glowG=ctx.createRadialGradient(CX,CY,cR*0.92,CX,CY,cR*1.25);
+    glowG.addColorStop(0,'rgba(255,255,255,0)'); glowG.addColorStop(0.5,'rgba(255,255,255,0.015)'); glowG.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.beginPath(); ctx.arc(CX,CY,cR*1.25,0,Math.PI*2); ctx.fillStyle=glowG; ctx.fill();
+
+    const iF=ctx.createRadialGradient(CX,CY,0,CX,CY,cR);
+    iF.addColorStop(0,'rgba(255,255,255,0.02)'); iF.addColorStop(0.7,'rgba(255,255,255,0.01)'); iF.addColorStop(1,'rgba(255,255,255,0.03)');
+    ctx.beginPath(); ctx.arc(CX,CY,cR,0,Math.PI*2); ctx.fillStyle=iF; ctx.fill();
+
+    ctx.beginPath(); ctx.arc(CX,CY,cR,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(255,255,255,${rA})`; ctx.lineWidth=1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(CX,CY,cR+4,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(255,255,255,${rA*0.3})`; ctx.lineWidth=0.5; ctx.stroke();
+
+    // INNER (clipped inside lens, magnified)
+    ctx.save();
+    ctx.beginPath(); ctx.arc(CX,CY,cR,0,Math.PI*2); ctx.clip();
+    ctx.fillStyle='rgba(8,8,12,0.6)'; ctx.fillRect(CX-cR,CY-cR,cR*2,cR*2);
+
+    const inner=[];
+    for(const n of nodes){
+      const dx=n.x-CX, dy=n.y-CY, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<=cR*1.3){
+        const tt=Math.min(d/cR,1);
+        const mag=LENS.MAGNIFY+LENS.DISTORT*tt*tt;
+        inner.push({...n, lx:CX+dx*mag, ly:CY+dy*mag, t:tt});
+      }
+    }
+    for(let i=0;i<inner.length;i++){
+      for(let j=i+1;j<inner.length;j++){
+        const dx=inner[i].x-inner[j].x, dy=inner[i].y-inner[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<LENS.EDGE_MAX_DIST){
+          const f=1-d/LENS.EDGE_MAX_DIST;
+          const aT=(inner[i].t+inner[j].t)/2;
+          ctx.beginPath(); ctx.moveTo(inner[i].lx,inner[i].ly); ctx.lineTo(inner[j].lx,inner[j].ly);
+          ctx.strokeStyle=`rgba(255,255,255,${LENS.EDGE_IN_A*f*(1-aT*0.5)})`;
+          ctx.lineWidth=1; ctx.stroke();
+        }
+      }
+    }
+    for(const n of inner){
+      const a=LENS.NODE_IN_A*(1-n.t*0.4);
+      const gr=n.size+LENS.GLOW*(1-n.t*0.5);
+      const g=ctx.createRadialGradient(n.lx,n.ly,n.size*0.3,n.lx,n.ly,gr);
+      g.addColorStop(0,`rgba(255,255,255,${a})`); g.addColorStop(0.4,`rgba(255,255,255,${a*0.6})`); g.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.beginPath(); ctx.arc(n.lx,n.ly,gr,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath(); ctx.arc(n.lx,n.ly,n.size*1.15,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();
+    }
+    ctx.restore();
+
+    // Edge shimmer
+    const sA=t*0.0008;
+    for(let i=0;i<60;i++){
+      const a=(i/60)*Math.PI*2;
+      const s=0.03+0.04*Math.sin(a*3+sA);
+      ctx.beginPath(); ctx.arc(CX+Math.cos(a)*cR,CY+Math.sin(a)*cR,1.5,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${s})`; ctx.fill();
+    }
+
+    if(state.phase==='hero') lensAnimId=requestAnimationFrame(renderLens);
+  }
+
+  function stopLens(){
+    if(lensAnimId){ cancelAnimationFrame(lensAnimId); lensAnimId=null; }
+  }
+
+  /* ═══════════════════════════════════════════
+     PHASE TRANSITION: Hero → App
+     ═══════════════════════════════════════════ */
+  function enterApp(){
+    state.phase='app';
+    const hero=$('#hero-section');
+    hero.classList.add('hidden');
+    setTimeout(()=>{
+      stopLens();
+      hero.style.display='none';
+      document.body.style.background='var(--white)';
+      $('#app-section').classList.add('active');
+      $('#navbar').classList.add('active');
+      $('#noise-overlay').classList.add('active');
+      goToScreen('guide');
+    },800);
+  }
+
+  function backToHero(){
+    state.phase='hero';
+    state.data=null; state.activeTab='unrequited'; state.sortMode='name';
+    const si=$('#search-input'); if(si) si.value='';
+    $('#error-msg').classList.remove('show');
+
+    $$('.screen').forEach(s=>s.classList.remove('active','visible'));
+    $('#app-section').classList.remove('active');
+    $('#navbar').classList.remove('active');
+    $('#noise-overlay').classList.remove('active');
+    document.body.style.background='#000';
+
+    const hero=$('#hero-section');
+    hero.style.display=''; hero.classList.remove('hidden');
+    lensStart=null;
+    lensAnimId=requestAnimationFrame(renderLens);
+  }
+
+  /* ═══════════════════════════════════════════
+     SCREEN MANAGEMENT
+     ═══════════════════════════════════════════ */
+  function goToScreen(name){
+    state.screen=name;
+    $$('.screen').forEach(s=>s.classList.remove('active','visible'));
+    const target=$(`#screen-${name}`);
+    target.classList.add('active');
+    void target.offsetWidth;
+    requestAnimationFrame(()=>target.classList.add('visible'));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function switchOS(os){
+    $$('.os-tab').forEach(t=>t.classList.toggle('active',t.dataset.os===os));
+    $('#os-hint-iphone').style.display = os==='iphone'?'block':'none';
+    $('#os-hint-android').style.display = os==='android'?'block':'none';
+  }
+
+  /* ═══════════════════════════════════════════
+     DATA PROCESSING (v2 — robust multi-format)
+     ═══════════════════════════════════════════ */
+
+  /* Extract users from any Instagram JSON structure.
+     Instagram uses TWO different formats:
+       - followers_1.json: username in string_list_data[0].value
+       - following.json:   username in "title" field (value ABSENT!)
+     We must handle both. */
+  function extractUsers(data){
+    const users=[];
+    function hrefToUsername(href){
+      if(!href) return '';
+      const m=href.match(/instagram\.com\/(?:_u\/)?([^/?#]+)/);
+      return m ? m[1] : '';
+    }
+    function walk(obj){
+      if(!obj||typeof obj!=='object') return;
+      if(Array.isArray(obj)){ obj.forEach(walk); return; }
+
+      let extracted=false;
+      if(Array.isArray(obj.string_list_data)){
+        obj.string_list_data.forEach(d=>{
+          /* Priority: d.value > obj.title > parsed from d.href */
+          const username = d.value
+            || (obj.title && typeof obj.title==='string' && obj.title.length>0 ? obj.title : '')
+            || hrefToUsername(d.href);
+          if(username){
+            const cleanHref = (d.href||'').replace('/_u/','/')
+              || `https://www.instagram.com/${username}`;
+            users.push({ username, href:cleanHref, timestamp:d.timestamp||0 });
+            extracted=true;
+          }
+        });
+      }
+      /* Fallback: title only (no string_list_data, or it yielded nothing) */
+      if(!extracted && obj.title && typeof obj.title==='string' && obj.title.length>0){
+        const sld = Array.isArray(obj.string_list_data) && obj.string_list_data[0];
+        const ts = sld ? (sld.timestamp||0) : (obj.timestamp||0);
+        const href = sld && sld.href
+          ? sld.href.replace('/_u/','/')
+          : `https://www.instagram.com/${obj.title}`;
+        users.push({ username:obj.title, href, timestamp:ts });
+      }
+
+      /* Walk ALL children to find nested entries */
+      Object.values(obj).forEach(v=>{
+        if(v && typeof v==='object') walk(v);
+      });
+    }
+    walk(data);
+    return deduplicateUsers(users);
+  }
+
+  /* Classify a file path as 'following' or 'followers'.
+     Uses basename only (not full path) to avoid the
+     "followers_and_following" directory name trap.
+     Multiple heuristics for robustness. */
+  function classifyFile(fn){
+    const basename = fn.split('/').pop().toLowerCase();
+
+    /* STRICT matching — only match actual follower/following data files.
+       Must NOT match: following_hashtags.json, close_friends.json,
+       blocked_profiles.json, pending_follow_requests.json, etc. */
+
+    /* "following.json" or "following_1.json", "following_2.json" */
+    if(/^following(_\d+)?\.json$/.test(basename)) return 'following';
+    /* "followers.json", "followers_1.json", "followers_2.json" */
+    if(/^followers(_\d+)?\.json$/.test(basename)) return 'followers';
+
+    return null;
+  }
+
+  function classifyData(followers,following){
+    const fwSet=new Set(followers.map(u=>normalizeUsername(u.username)));
+    const fgSet=new Set(following.map(u=>normalizeUsername(u.username)));
+    return {
+      followers, following,
+      unrequited: following.filter(u=>!fwSet.has(normalizeUsername(u.username))),
+      fans: followers.filter(u=>!fgSet.has(normalizeUsername(u.username))),
+      mutual: following.filter(u=>fwSet.has(normalizeUsername(u.username))),
+    };
+  }
+
+  /* ── Fallback: detect type from JSON content structure ── */
+  function detectTypeFromContent(json){
+    if(!json||typeof json!=='object') return null;
+    const keys = Object.keys(json);
+    for(const k of keys){
+      const kl = k.toLowerCase();
+      /* EXACT match only for these specific Instagram wrapper keys.
+         Avoid matching "relationships_following_hashtags",
+         "relationships_follow_requests_sent", etc. */
+      if(kl==='relationships_following') return 'following';
+      if(kl==='relationships_followers') return 'followers';
+    }
+    return null;
+  }
+
+  async function processFile(file){
+    showAnalyzing();
+    const diag = { files:[], errors:[], followersCount:0, followingCount:0 };
+    try {
+      let followers=[], following=[];
+      if(file.name.toLowerCase().endsWith('.json')){
+        updateProgress(0.3,'JSONを解析中…');
+        const json=JSON.parse(await file.text());
+        const users=extractUsers(json);
+        let type=classifyFile(file.name);
+        if(!type) type=detectTypeFromContent(json);
+        if(type==='followers') followers=users;
+        else if(type==='following') following=users;
+        else throw new Error('SINGLE_JSON');
+      } else if(file.name.toLowerCase().endsWith('.zip')){
+        updateProgress(0.1,'ZIPを展開中…');
+        const zip=await JSZip.loadAsync(file);
+        const jsonFiles = Object.keys(zip.files).filter(fn=>fn.toLowerCase().endsWith('.json')&&!zip.files[fn].dir);
+        updateProgress(0.2,`${jsonFiles.length}個のJSONファイルを検出…`);
+
+        let step=0;
+        for(const fn of jsonFiles){
+          step++;
+          updateProgress(0.2+0.4*(step/jsonFiles.length), `解析中: ${fn.split('/').pop()}`);
+          let type=classifyFile(fn);
+          let json;
+          try{
+            json=JSON.parse(await zip.files[fn].async('string'));
+          }catch(parseErr){
+            diag.errors.push(`JSON parse error: ${fn.split('/').pop()}`);
+            continue;
+          }
+          /* If filename classification fails, try content-based detection */
+          if(!type) type=detectTypeFromContent(json);
+          if(!type){
+            diag.files.push({ name:fn.split('/').pop(), type:'skip', users:0 });
+            continue;
+          }
+          try{
+            const users=extractUsers(json);
+            diag.files.push({ name:fn.split('/').pop(), type, users:users.length });
+            if(type==='followers') followers=followers.concat(users);
+            else following=following.concat(users);
+          }catch(extractErr){
+            diag.errors.push(`Extract error: ${fn.split('/').pop()} — ${extractErr.message}`);
+          }
+        }
+        followers=deduplicateUsers(followers);
+        following=deduplicateUsers(following);
+      } else { throw new Error('INVALID_TYPE'); }
+
+      diag.followersCount=followers.length;
+      diag.followingCount=following.length;
+      console.log('[mieta] Diagnosis:', JSON.stringify(diag, null, 2));
+
+      updateProgress(0.65,'フォロワーデータを検証中…'); await sleep(250);
+
+      if(!followers.length && !following.length){
+        throw new Error('NO_DATA');
+      }
+
+      updateProgress(0.8,'カテゴリを分類中…'); await sleep(250);
+      state.data=classifyData(followers,following);
+      diag.unrequited=state.data.unrequited.length;
+      diag.fans=state.data.fans.length;
+      diag.mutual=state.data.mutual.length;
+      /* Store diag on state for display */
+      state.diag=diag;
+      console.log('[mieta] Results:', `followers=${followers.length}, following=${following.length}, unrequited=${state.data.unrequited.length}, fans=${state.data.fans.length}, mutual=${state.data.mutual.length}`);
+
+      updateProgress(0.95,'結果を準備中…'); await sleep(300);
+      updateProgress(1,'完了'); await sleep(250);
+      hideAnalyzing(); showResults();
+    } catch(err){
+      console.error('[mieta] Error:', err.message, 'Diag:', JSON.stringify(diag, null, 2));
+      hideAnalyzing();
+      /* Show diagnostic detail directly in UI — no console needed */
+      const diagLines = diag.files.map(f=>`${f.name} → ${f.type} (${f.users}人)`).join('\n');
+      const errLines = diag.errors.length ? '\nErrors: '+diag.errors.join(', ') : '';
+      showError(err.message, `検出ファイル:\n${diagLines||'(なし)'}${errLines}\nfollowers=${diag.followersCount}, following=${diag.followingCount}`);
+    }
+  }
+
+  function showError(code, diagDetail){
+    const el=$('#error-msg');
+    const msgs={
+      INVALID_TYPE:'ファイル形式が正しくありません。Instagramから書き出された .zip または .json 形式を選択してください。',
+      NO_DATA:'フォロー・フォロワーのデータが見つかりませんでした。JSON形式でダウンロードしたデータであることを確認してください。',
+      SINGLE_JSON:'フォロワーとフォロー中の両方のデータが必要です。ZIP形式でダウンロードしたファイルをそのままアップロードしてください。',
+    };
+    const mainMsg = msgs[code]||'予期せぬエラーが発生しました。ファイルが破損していないか確認し、もう一度お試しください。';
+    if(diagDetail){
+      el.innerHTML=escapeHtml(mainMsg)+'<br><pre style="margin-top:8px;padding:12px;background:rgba(0,0,0,0.03);border-radius:8px;font-size:11px;line-height:1.6;white-space:pre-wrap;word-break:break-all;text-align:left;color:#666;max-height:200px;overflow-y:auto">'+escapeHtml(diagDetail)+'</pre>';
+    } else {
+      el.textContent=mainMsg;
+    }
+    el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),30000);
+  }
+
+  /* ═══ ANALYZING OVERLAY ═══ */
+  function showAnalyzing(){
+    $('#analyzing-overlay').classList.add('show');
+    $('#analyzing-bar-fill').style.width='0%';
+    $('#analyzing-pct-num').textContent='0';
+    $('#analyzing-status').textContent='準備中…';
+  }
+  function updateProgress(p,text){
+    $('#analyzing-bar-fill').style.width=`${p*100}%`;
+    $('#analyzing-status').textContent=text;
+    animateNumber($('#analyzing-pct-num'),Math.round(p*100));
+  }
+  function hideAnalyzing(){ $('#analyzing-overlay').classList.remove('show'); }
+
+  function animateNumber(el,target){
+    const cur=parseInt(el.textContent)||0; if(cur===target) return;
+    const step=target>cur?1:-1;
+    const dur=Math.max(8,200/Math.abs(target-cur));
+    let v=cur;
+    const iv=setInterval(()=>{ v+=step; el.textContent=v; if(v===target) clearInterval(iv); },dur);
+  }
+
+  function animateCountUp(el,target){
+    const dur=800, start=performance.now();
+    const step=(now)=>{
+      const p=Math.min((now-start)/dur,1);
+      el.textContent=Math.round((1-Math.pow(1-p,3))*target);
+      if(p<1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ═══ RESULTS ═══ */
+  function showResults(){
+    goToScreen('results');
+    const d=state.data;
+    const dg=state.diag;
+    /* Summary with diagnostic info */
+    let summaryHtml=`${d.following.length}フォロー中 · ${d.followers.length}フォロワー`;
+    if(dg && dg.files.length){
+      summaryHtml+=`<br><small style="color:var(--sub);font-size:11px;opacity:0.6">${BUILD_VERSION} | 検出: `;
+      summaryHtml+=dg.files.map(f=>`${escapeHtml(f.name)}(${f.type}:${f.users})`).join(', ');
+      summaryHtml+=`</small>`;
+    }
+    $('#results-summary').innerHTML=summaryHtml;
+
+    const stats=[
+      {key:'unrequited',label:'フォロバなし',count:d.unrequited.length,color:'#FF3B30'},
+      {key:'fans',label:'片思われ',count:d.fans.length,color:'#FF9500'},
+      {key:'mutual',label:'相互',count:d.mutual.length,color:'#34C759'},
+      {key:'total',label:'合計フォロー',count:d.following.length,color:'#5856D6'},
+    ];
+    const sg=$('#stats-grid');
+    sg.innerHTML=stats.map((s,i)=>`
+      <div class="stat-card" style="animation:fadeSlide 0.5s var(--ease-out) ${i*0.1}s both"
+        ${s.key!=='total'?`onclick="Mieta.switchTab('${s.key}')"`:''}>
+        <div class="stat-label">${escapeHtml(s.label)}</div>
+        <div class="stat-value" data-target="${s.count}">0</div>
+        <div class="stat-bar" style="background:${s.color}"></div>
+      </div>`).join('');
+    setTimeout(()=>sg.querySelectorAll('.stat-value').forEach(el=>animateCountUp(el,+el.dataset.target)),200);
+    renderTabs(); renderList();
+  }
+
+  function renderTabs(){
+    $('#result-tabs').innerHTML=CATEGORIES.map(c=>{
+      const cnt=state.data[c.key].length;
+      return `<button class="result-tab${state.activeTab===c.key?' active':''}" onclick="Mieta.switchTab('${c.key}')">
+        ${escapeHtml(c.label)}<span class="tab-count">${cnt}</span></button>`;
+    }).join('');
+  }
+
+  function switchTab(k){ state.activeTab=k; renderTabs(); renderList(); }
+
+  function renderList(){
+    const list=$('#user-list');
+    const q=($('#search-input').value||'').trim().toLowerCase();
+    let users=[...(state.data[state.activeTab]||[])];
+    if(q) users=users.filter(u=>normalizeUsername(u.username).includes(q));
+    if(state.sortMode==='name') users.sort((a,b)=>a.username.localeCompare(b.username));
+    else if(state.sortMode==='newest') users.sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+    else users.sort((a,b)=>(a.timestamp||0)-(b.timestamp||0));
+
+    if(!users.length){
+      list.innerHTML=`<p style="text-align:center;color:var(--sub);padding:48px 0;font-size:15px">${q?'該当するユーザーが見つかりません':'このカテゴリにユーザーはいません'}</p>`;
+      $('#premium-banner').classList.remove('show'); return;
+    }
+
+    const limit=state.isPremium?users.length:Math.min(FREE_LIMIT,users.length);
+    const locked=!state.isPremium && users.length>FREE_LIMIT;
+    let html='';
+    users.forEach((u,i)=>{
+      const isL=i>=limit;
+      const dn=isL?DUMMY_NAMES[i%DUMMY_NAMES.length]:escapeHtml(u.username);
+      const dd=isL?'':formatDate(u.timestamp);
+      const hr=isL?'javascript:void(0)':escapeHtml(u.href||`https://www.instagram.com/${u.username}`);
+      const col=avatarColor(u.username);
+      const init=(isL?'?':u.username.charAt(0)).toUpperCase();
+      html+=`<div class="user-row${isL?' locked':''}" style="animation-delay:${Math.min(i*0.03,0.6)}s">
+        <div class="user-info">
+          <div class="user-avatar" style="background:${isL?'#D2D2D7':col}">${init}</div>
+          <div class="user-name-wrap">
+            <a class="user-name" href="${hr}" ${isL?'onclick="Mieta.openUnlock();return false;"':'target="_blank" rel="noopener noreferrer"'}>${dn}</a>
+            ${dd?`<div class="user-date">${dd}</div>`:''}
+          </div>
+        </div>
+        ${!isL?`<div class="user-actions">
+          <button class="user-action-btn" title="コピー" onclick="navigator.clipboard.writeText('${escapeHtml(u.username)}');Mieta.toast('コピーしました')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+          <button class="user-action-btn" title="開く" onclick="window.open('${hr}','_blank')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#86868B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </button>
+        </div>`:''}</div>`;
+    });
+    list.innerHTML=html;
+
+    const banner=$('#premium-banner');
+    if(locked){
+      $('#premium-desc').textContent=`残り ${users.length-FREE_LIMIT}人 のユーザーがロックされています`;
+      banner.classList.add('show');
+    } else banner.classList.remove('show');
+  }
+
+  function cycleSort(){
+    const idx=SORT_MODES.indexOf(state.sortMode);
+    state.sortMode=SORT_MODES[(idx+1)%SORT_MODES.length];
+    $('#sort-btn .label').textContent=SORT_LABELS[state.sortMode];
+    renderList();
+  }
+
+  function copyList(){
+    if(!state.data) return;
+    const users=state.data[state.activeTab]||[];
+    const limit=state.isPremium?users.length:Math.min(FREE_LIMIT,users.length);
+    navigator.clipboard.writeText(users.slice(0,limit).map(u=>u.username).join('\n'))
+      .then(()=>toast(`${Math.min(limit,users.length)}件をコピーしました`));
+  }
+
+  async function shareList(){
+    if(!state.data) return;
+    const cat=CATEGORIES.find(c=>c.key===state.activeTab);
+    const users=state.data[state.activeTab]||[];
+    const limit=state.isPremium?users.length:Math.min(FREE_LIMIT,users.length);
+    const text=users.slice(0,limit).map(u=>u.username).join('\n');
+    if(navigator.share){
+      try{ await navigator.share({title:`mieta — ${cat.label}`,text}); }
+      catch(e){ if(e.name!=='AbortError'){ navigator.clipboard.writeText(text); toast('クリップボードにコピーしました'); }}
+    } else { navigator.clipboard.writeText(text); toast('クリップボードにコピーしました'); }
+  }
+
+  /* ═══ PREMIUM ═══ */
+  function openUnlock(){ $('#unlock-modal').classList.add('show'); }
+  function closeUnlock(){ $('#unlock-modal').classList.remove('show'); }
+  function purchasePremium(){
+    state.isPremium=true; localStorage.setItem(PREMIUM_KEY,'true');
+    closeUnlock(); toast('mieta+ が有効になりました');
+    if(state.data) renderList();
+  }
+
+  /* ═══ RESET ═══ */
+  function reset(){ backToHero(); }
+
+  /* ═══ UPLOAD ZONE ═══ */
+  function initUpload(){
+    const zone=$('#upload-zone'), input=$('#file-input');
+    let dc=0;
+    zone.addEventListener('click',()=>input.click());
+    zone.addEventListener('dragover',e=>e.preventDefault());
+    zone.addEventListener('dragenter',e=>{ e.preventDefault(); dc++; zone.classList.add('dragging'); $('#bg-blobs').classList.add('active'); });
+    zone.addEventListener('dragleave',()=>{ dc--; if(dc<=0){ dc=0; zone.classList.remove('dragging'); $('#bg-blobs').classList.remove('active'); }});
+    zone.addEventListener('drop',e=>{
+      e.preventDefault(); dc=0; zone.classList.remove('dragging'); $('#bg-blobs').classList.remove('active');
+      const f=e.dataTransfer?.files?.[0]; if(f) processFile(f);
+    });
+    input.addEventListener('change',e=>{ const f=e.target.files[0]; if(f) processFile(f); input.value=''; });
+  }
+
+  function initScroll(){
+    window.addEventListener('scroll',()=>{ $('#navbar').classList.toggle('scrolled',window.scrollY>10); },{passive:true});
+  }
+
+  function detectOS(){
+    if(/android/i.test(navigator.userAgent)) switchOS('android');
+    else switchOS('iphone');
+  }
+
+  /* ═══ INIT ═══ */
+  function init(){
+    initLens();
+    initUpload();
+    initScroll();
+    detectOS();
+    /* Version display */
+    const vEl=$('#hero-version');
+    if(vEl) vEl.textContent=BUILD_VERSION;
+  }
+
+  document.addEventListener('DOMContentLoaded',init);
+
+  /* ═══ PUBLIC API ═══ */
+  return {
+    goToScreen, switchOS, renderList, copyList, shareList,
+    reset, purchasePremium, closeUnlock, openUnlock,
+    switchTab, cycleSort, toast, enterApp,
+  };
+})();
+</script>
+</body>
+</html>
