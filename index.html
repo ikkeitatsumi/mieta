@@ -212,6 +212,8 @@ button { font-family: inherit; }
 .hero-catchcopy {
   text-align: center;
   margin-top: 24px;
+  max-width: 480px;
+  padding: 0 20px;
 }
 .hero-catchcopy h2 {
   font-size: clamp(22px, 4.5vw, 32px);
@@ -243,8 +245,10 @@ button { font-family: inherit; }
   background-clip: text;
 }
 .hero-trust-inline {
-  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
   margin-top: 20px;
+  max-width: 480px;
+  padding: 0 20px;
   opacity: 0; animation: hSubReveal 0.8s var(--ease-out) 2.4s forwards;
   pointer-events: auto;
 }
@@ -254,13 +258,15 @@ button { font-family: inherit; }
   background: var(--off-white); border: 1px solid var(--border);
 }
 .hero-cta-area {
-  text-align: center; margin-top: 32px;
+  text-align: center; margin-top: 28px;
+  max-width: 480px;
+  padding: 0 20px;
   pointer-events: auto;
   opacity: 0; animation: hSubReveal 0.8s var(--ease-out) 2.6s forwards;
 }
 .hero-main-cta {
-  display: inline-block; padding: 18px 48px;
-  border-radius: 9999px; border: none;
+  display: block; width: 100%; padding: 18px 24px;
+  border-radius: 16px; border: none;
   background: var(--ig-gradient);
   color: #FFFFFF; font-size: clamp(15px, 2.8vw, 18px); font-weight: 600;
   cursor: pointer; letter-spacing: 0.02em;
