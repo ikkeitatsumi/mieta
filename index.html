@@ -20,6 +20,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231D1D1F'/><text x='50' y='68' font-family='system-ui' font-size='42' font-weight='600' fill='white' text-anchor='middle'>m</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231D1D1F'/><text x='50' y='68' font-family='system-ui' font-size='42' font-weight='600' fill='white' text-anchor='middle'>m</text></svg>">
 <link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -33,7 +34,7 @@
   --off-white: #F5F5F7;
   --jet: #1D1D1F;
   --sub: #86868B;
-  --accent: #0071E3;
+  --accent: #4F46E5;
   --border: rgba(0,0,0,0.06);
   --border-light: rgba(255,255,255,0.5);
   --glass: rgba(255,255,255,0.55);
@@ -50,7 +51,8 @@
   --shadow-lg: 0 16px 56px -12px rgba(0,0,0,0.1);
   --ease-out: cubic-bezier(.16,1,.3,1);
   --ease-smooth: cubic-bezier(.4,0,.2,1);
-  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+  --font: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+  --cta-gradient: linear-gradient(135deg, #F59E0B, #EC4899);
   --ig-gradient: linear-gradient(135deg, #833AB4, #E1306C, #F77737);
   --ig-gradient-light: linear-gradient(135deg, rgba(131,58,180,0.1), rgba(225,48,108,0.1), rgba(247,119,55,0.1));
 }
@@ -227,100 +229,50 @@ button { font-family: inherit; }
   opacity: 0;
   animation: hSubReveal 0.8s var(--ease-out) 2.3s forwards;
 }
-/* Primary DL CTA */
-.hero-primary-cta {
-  text-align: center;
-  margin-top: 28px;
-  pointer-events: auto;
-  opacity: 0;
-  animation: hSubReveal 0.8s var(--ease-out) 2.4s forwards;
-}
-.step-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--sub);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-.hero-dl-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 18px 40px;
-  border-radius: 16px;
-  background: var(--ig-gradient);
-  color: #FFFFFF;
-  font-size: clamp(14px, 2.5vw, 17px);
-  font-weight: 600;
-  text-decoration: none;
-  letter-spacing: 0.01em;
-  box-shadow: 0 6px 28px rgba(225,48,108,0.3);
-  transition: all 0.4s var(--ease-out);
-}
-.hero-dl-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 40px rgba(225,48,108,0.4);
-}
-.step-hint {
-  font-size: 12px;
-  color: var(--sub);
-  margin-top: 12px;
-}
-
-/* Secondary CTA row */
-.hero-cta-row {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  margin-top: 24px;
-  pointer-events: auto;
-  opacity: 0;
-  animation: heroFadeUp 1s var(--ease-out) 2.8s forwards;
-}
-.hero-badges {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--sub);
-  padding: 4px 10px;
-  border-radius: 100px;
-  background: var(--off-white);
-  border: 1px solid var(--border);
-}
-.badge-icon { font-size: 12px; }
-
-/* Secondary CTA button */
-.hero-cta-btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 28px; border-radius: 100px;
-  background: rgba(29,29,31,0.06);
-  border: 1.5px solid rgba(29,29,31,0.12);
-  color: var(--jet); font-size: 14px; font-weight: 500;
-  cursor: pointer; letter-spacing: 0.01em;
-  transition: all 0.3s ease;
-  touch-action: manipulation;
-}
-.hero-cta-btn:hover {
-  background: rgba(29,29,31,0.10);
-  border-color: rgba(29,29,31,0.2);
-  transform: translateY(-1px);
-}
-.hero-cta-btn svg { transition: transform 0.3s ease; }
-.hero-cta-btn:hover svg { transform: translateY(-2px); }
 
 /* Hero keyframes */
 @keyframes heroFadeIn { from { opacity:0 } to { opacity:1 } }
 @keyframes heroFadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
+
+/* New hero elements */
+.hero-highlight {
+  background: var(--ig-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-trust-inline {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin-top: 20px;
+  opacity: 0; animation: hSubReveal 0.8s var(--ease-out) 2.4s forwards;
+  pointer-events: auto;
+}
+.trust-chip {
+  font-size: 13px; font-weight: 500; color: var(--jet);
+  padding: 6px 14px; border-radius: 100px;
+  background: var(--off-white); border: 1px solid var(--border);
+}
+.hero-cta-area {
+  text-align: center; margin-top: 32px;
+  pointer-events: auto;
+  opacity: 0; animation: hSubReveal 0.8s var(--ease-out) 2.6s forwards;
+}
+.hero-main-cta {
+  display: inline-block; padding: 18px 48px;
+  border-radius: 9999px; border: none;
+  background: var(--ig-gradient);
+  color: #FFFFFF; font-size: clamp(15px, 2.8vw, 18px); font-weight: 600;
+  cursor: pointer; letter-spacing: 0.02em;
+  box-shadow: 0 8px 32px rgba(225,48,108,0.3);
+  transition: all 0.4s var(--ease-out);
+}
+.hero-main-cta:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 44px rgba(225,48,108,0.4);
+}
+.hero-cta-note {
+  font-size: 12px; color: var(--sub); margin-top: 16px; line-height: 1.7;
+}
 
 /* ═══ PHASE 2: LIGHT APP SCREENS ═══ */
 
@@ -785,134 +737,120 @@ a.user-name:hover { color: var(--accent); }
 .reset-btn:hover { text-decoration: underline; }
 
 /* ═══ WHY MIETA SECTION ═══ */
-.why-section {
-  background: var(--white);
-  padding: 60px 24px;
-  position: relative;
-  z-index: 2;
+/* ═══ LP SECTIONS ═══ */
+.lp-section {
+  padding: 80px 24px;
 }
-.why-container {
+.lp-section--gray {
+  background: var(--off-white);
+}
+.section-inner {
   max-width: 800px;
   margin: 0 auto;
+  text-align: center;
 }
-.why-section h2 {
-  font-size: clamp(24px, 4vw, 32px);
+.section-heading {
+  font-size: clamp(24px, 5vw, 36px);
   font-weight: 700;
-  text-align: center;
   color: var(--jet);
-  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
 }
-.why-lead {
-  text-align: center;
+.section-sub {
+  font-size: clamp(13px, 2vw, 16px);
   color: var(--sub);
-  font-size: 14px;
-  margin-bottom: 40px;
+  margin-top: 12px;
+  line-height: 1.7;
 }
-.why-grid {
+
+/* Trust Grid */
+.trust-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 40px;
+  gap: 20px;
+  margin-top: 48px;
 }
-@media (max-width: 640px) {
-  .why-grid { grid-template-columns: 1fr; gap: 12px; }
-}
-.why-card {
-  padding: 24px 20px;
+.trust-card {
+  padding: 32px 20px;
   border-radius: var(--radius-md);
   background: var(--off-white);
   border: 1px solid var(--border);
+  text-align: center;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
 }
-.why-card.danger {
-  background: rgba(255,59,48,0.04);
-  border-color: rgba(255,59,48,0.12);
+.trust-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
-.why-icon { font-size: 24px; margin-bottom: 10px; }
-.why-card h3 {
-  font-size: 15px;
-  font-weight: 700;
+.trust-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+.trust-card h3 {
+  font-size: 16px;
+  font-weight: 600;
   color: var(--jet);
   margin-bottom: 8px;
 }
-.why-card p {
-  font-size: 13px;
+.trust-card p {
+  font-size: 14px;
   color: var(--sub);
-  line-height: 1.7;
+  line-height: 1.6;
 }
-.why-comparison {
-  border-radius: var(--radius-md);
-  background: var(--off-white);
-  padding: 24px;
-  border: 1px solid var(--border);
+
+/* Compare Table */
+.compare-table-wrap {
+  margin-top: 40px;
+  overflow-x: auto;
 }
-.why-comparison .comparison-table { margin: 0; }
-.comparison-table {
+.compare-table {
   width: 100%;
   border-collapse: collapse;
-}
-.comparison-table th,
-.comparison-table td {
-  padding: 12px 16px;
+  font-size: 14px;
   text-align: left;
+}
+.compare-table th,
+.compare-table td {
+  padding: 14px 16px;
   border-bottom: 1px solid var(--border);
-  font-size: 13px;
 }
-.comparison-table th {
-  background: transparent;
+.compare-table thead th {
   font-weight: 600;
-  color: var(--jet);
-  font-size: 12px;
-  letter-spacing: 0.04em;
+  font-size: 13px;
+  letter-spacing: 0.05em;
 }
-.comparison-table tr:last-child td { border-bottom: none; }
-.comparison-table td:first-child { font-weight: 500; color: var(--jet); width: 30%; }
-.table-icon { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; font-size: 13px; }
-.table-icon.safe { color: var(--green); }
-.table-icon.risk { color: var(--red); }
-
-/* ═══ HOW IT WORKS (3-Step) ═══ */
-.steps-section {
-  padding: 60px 24px;
-  background: var(--off-white);
-}
-.steps-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-.steps-section h2 {
-  font-size: clamp(24px, 4vw, 32px);
-  font-weight: 700;
-  text-align: center;
-  color: var(--jet);
-  margin-bottom: 12px;
-}
-.steps-section .steps-sub {
-  text-align: center;
-  color: var(--sub);
+.ct-mieta { color: var(--accent); }
+.ct-other { color: var(--sub); }
+.ct-good { color: #16A34A; font-weight: 500; }
+.ct-bad { color: #DC2626; font-weight: 500; }
+.compare-note {
+  margin-top: 28px;
   font-size: 15px;
-  margin-bottom: 48px;
+  font-weight: 500;
+  color: var(--sub);
+  font-style: italic;
 }
+
+/* Steps Grid */
 .steps-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-}
-@media (max-width: 640px) {
-  .steps-grid { grid-template-columns: 1fr; gap: 20px; }
+  margin-top: 48px;
 }
 .step-card {
-  background: var(--white);
+  padding: 32px 20px;
   border-radius: var(--radius-md);
-  padding: 32px 24px;
-  text-align: center;
-  box-shadow: var(--shadow-sm);
+  background: var(--white);
   border: 1px solid var(--border);
-  transition: transform 0.3s var(--ease-out);
+  text-align: center;
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
 }
 .step-card:hover {
   transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
-.step-card .step-number {
+.step-number {
   width: 48px; height: 48px;
   border-radius: 50%;
   background: var(--ig-gradient);
@@ -922,100 +860,162 @@ a.user-name:hover { color: var(--accent); }
   margin-bottom: 16px;
 }
 .step-card h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--jet);
-  margin-bottom: 10px;
+  font-size: 16px; font-weight: 600;
+  color: var(--jet); margin-bottom: 10px;
 }
 .step-card p {
-  font-size: 14px;
-  color: var(--sub);
-  line-height: 1.7;
+  font-size: 14px; color: var(--sub); line-height: 1.7;
 }
-.step-details {
-  margin-top: 12px;
+.step-card small {
+  color: var(--sub); opacity: 0.7;
+}
+.steps-cta {
+  margin-top: 40px;
+}
+.steps-cta-btn {
+  display: inline-block;
+  padding: 16px 40px;
+  border-radius: 9999px;
+  border: 2px solid var(--jet);
+  background: transparent;
+  color: var(--jet);
+  font-size: 16px; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+}
+.steps-cta-btn:hover {
+  background: var(--jet);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Premium */
+.premium-features {
+  display: flex; flex-direction: column;
+  gap: 12px; max-width: 400px;
+  margin: 32px auto 0;
   text-align: left;
 }
-.step-details summary {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--accent);
-  cursor: pointer;
-  padding: 4px 0;
+.pf-item {
+  font-size: 15px; color: var(--jet);
+  display: flex; align-items: center; gap: 10px;
 }
-.step-details summary:hover { text-decoration: underline; }
-.step-details ol {
-  margin-top: 10px;
-  padding-left: 20px;
+.pf-check {
+  color: #16A34A; font-weight: 700; font-size: 16px;
+}
+.premium-price {
+  margin-top: 32px;
+}
+.price-amount {
+  font-size: clamp(36px, 7vw, 52px);
+  font-weight: 700;
+  color: var(--jet);
+  letter-spacing: -0.03em;
+}
+.price-note {
+  font-size: 15px;
+  color: var(--sub);
+  margin-left: 4px;
+}
+.premium-note {
   font-size: 13px;
   color: var(--sub);
-  line-height: 1.9;
+  margin-top: 8px;
 }
-.step-details ol li {
-  margin-bottom: 4px;
+.premium-cta {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 18px 48px;
+  border-radius: 9999px;
+  border: none;
+  background: linear-gradient(135deg, #F59E0B, #EC4899);
+  color: #fff;
+  font-size: 17px; font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(236,72,153,0.3);
+  transition: all 0.4s var(--ease-out);
+}
+.premium-cta:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 44px rgba(236,72,153,0.4);
 }
 
-
-/* ═══ FAQ SECTION ═══ */
-.faq-section {
-  padding: 48px 24px;
-  background: var(--off-white);
-}
-.faq-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-.faq-section h2 {
-  font-size: clamp(24px, 4vw, 32px);
-  font-weight: 700;
-  text-align: center;
-  color: var(--jet);
-  margin-bottom: 40px;
+/* FAQ */
+.faq-list {
+  max-width: 640px;
+  margin: 40px auto 0;
+  text-align: left;
 }
 .faq-item {
-  background: var(--white);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  margin-bottom: 12px;
-  overflow: hidden;
-}
-.faq-question {
-  width: 100%;
-  padding: 20px 24px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--jet);
-  background: none;
-  border: none;
-  text-align: left;
+  border-bottom: 1px solid var(--border);
   cursor: pointer;
+}
+.faq-q {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background 0.2s;
+  padding: 20px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--jet);
 }
-.faq-question:hover { background: rgba(0,0,0,0.02); }
-.faq-question .faq-toggle {
-  font-size: 18px;
+.faq-toggle {
+  font-size: 20px;
   color: var(--sub);
-  transition: transform 0.3s var(--ease-out);
+  transition: transform 0.3s;
 }
 .faq-item.open .faq-toggle {
   transform: rotate(45deg);
 }
-.faq-answer {
+.faq-a {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s var(--ease-out), padding 0.4s var(--ease-out);
-}
-.faq-item.open .faq-answer {
-  max-height: 300px;
-  padding: 0 24px 20px;
-}
-.faq-answer p {
   font-size: 14px;
   color: var(--sub);
   line-height: 1.8;
+  padding: 0;
+  transition: max-height 0.4s var(--ease-out), padding 0.4s;
+}
+.faq-item.open .faq-a {
+  max-height: 300px;
+  padding: 0 0 20px;
+}
+
+/* Fade in on scroll */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+.fade-in-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .trust-grid, .steps-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-trust-inline {
+    flex-direction: column;
+    align-items: center;
+  }
+  .compare-table {
+    font-size: 13px;
+  }
+  .compare-table th,
+  .compare-table td {
+    padding: 10px 8px;
+  }
+}
+
+/* Footer */
+.lp-footer {
+  padding: 40px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--sub);
 }
 
 /* ═══ SEO ARTICLE SECTION ═══ */
@@ -1189,146 +1189,139 @@ a.user-name:hover { color: var(--accent); }
     </div>
 
     <div class="hero-catchcopy">
-      <h2>インスタの「片想い」を<br>ひと目で確認。</h2>
-      <p class="hero-subcopy">フォローしているのに返してくれないユーザーを、<br>ログイン不要・パスワード不要で安全にチェック。</p>
+      <h2>インスタの片想いを、<br><span class="hero-highlight">3秒で終わらせる。</span></h2>
+      <p class="hero-subcopy">フォローしてるのに返してくれない人…<br>全部、見えてしまう。</p>
     </div>
-
-    <div class="hero-primary-cta">
-      <p class="step-label">STEP 1 — データを取得する</p>
-      <a class="hero-dl-btn" href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Instagramのデータダウンロードページを開く
-      </a>
-      <p class="step-hint">※ 「フォロワーとフォロー中」のみ・JSON形式で取得してください</p>
+    <div class="hero-trust-inline">
+      <span class="trust-chip">🔒 ログイン一切不要</span>
+      <span class="trust-chip">🛡️ BANリスク0%</span>
+      <span class="trust-chip">📱 ブラウザだけで完結</span>
     </div>
-
-    <div class="hero-cta-row">
-      <button class="hero-cta-btn" onclick="Mieta.enterApp()" ontouchend="this.click()">
-        ZIPファイルをアップロードする
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4M4 14v4a2 2 0 002 2h12a2 2 0 002-2v-4"/></svg>
-      </button>
-      <div class="hero-badges">
-        <span class="hero-badge"><span class="badge-icon">🔒</span>ログイン不要</span>
-        <span class="hero-badge"><span class="badge-icon">🛡️</span>BAN 0%</span>
-        <span class="hero-badge"><span class="badge-icon">📱</span>ブラウザ完結</span>
-      </div>
+    <div class="hero-cta-area">
+      <button class="hero-main-cta" onclick="Mieta.enterApp()">無料で今すぐチェックする</button>
+      <p class="hero-cta-note">※ Instagram公式の「データダウンロード」ZIPを使うだけ。<br>パスワードもIDも入力しません。</p>
     </div>
 
   </div>
 </section>
 
-<!-- ═══ WHY MIETA ═══ -->
-<section id="trust-section" class="why-section">
-  <div class="why-container">
-    <h2 class="fade-in-section">なぜmietaは安全なのか</h2>
-    <p class="why-lead fade-in-section">他社アプリとの決定的な違い — mietaはパスワードを知りません。</p>
-
-    <div class="why-grid fade-in-section">
-      <div class="why-card">
-        <div class="why-icon">🔐</div>
-        <h3>ログイン不要</h3>
-        <p>IDもパスワードも入力不要。乗っ取りリスクはゼロ。Instagram公式の「データダウンロード」機能だけを使います。</p>
+<!-- ═══ TRUST ═══ -->
+<section id="trust-section" class="lp-section fade-in-section">
+  <div class="section-inner">
+    <h2 class="section-heading">なぜ、mietaは安心なのか</h2>
+    <p class="section-sub">安全第一。それだけは譲れません。</p>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-icon">🔐</div>
+        <h3>絶対にログイン不要</h3>
+        <p>ID/パスワードを預かるサービスとは違います。</p>
       </div>
-      <div class="why-card">
-        <div class="why-icon">💻</div>
-        <h3>データはブラウザ内で完結</h3>
-        <p>サーバーへの送信は一切なし。完全オフライン感覚で利用でき、ページを閉じればデータも消えます。</p>
+      <div class="trust-card">
+        <div class="trust-icon">🛡️</div>
+        <h3>BANリスクゼロ</h3>
+        <p>Instagram公式規約に100%準拠。</p>
       </div>
-      <div class="why-card danger">
-        <div class="why-icon">⚠️</div>
-        <h3>他社アプリの危険性</h3>
-        <p>ID/PASS入力を求めるアプリは規約違反。永久凍結（BAN）や乗っ取りの原因になります。「足跡が見える」も詐欺です。</p>
+      <div class="trust-card">
+        <div class="trust-icon">🔒</div>
+        <h3>データは端末の中だけ</h3>
+        <p>サーバーに1バイトも送りません。</p>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="why-comparison fade-in-section">
-      <table class="comparison-table">
+<!-- ═══ COMPARISON ═══ -->
+<section id="compare-section" class="lp-section lp-section--gray fade-in-section">
+  <div class="section-inner">
+    <h2 class="section-heading">ほかのツールとの違い</h2>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
         <thead>
-          <tr>
-            <th></th>
-            <th style="color:var(--green)">mieta</th>
-            <th style="color:var(--red)">他社アプリ</th>
-          </tr>
+          <tr><th></th><th class="ct-mieta">mieta</th><th class="ct-other">他のアプリ</th></tr>
         </thead>
         <tbody>
-          <tr><td>ログイン</td><td><span class="table-icon safe">✓ 不要</span></td><td><span class="table-icon risk">✕ ID/PASS必須</span></td></tr>
-          <tr><td>BANリスク</td><td><span class="table-icon safe">✓ 0%</span></td><td><span class="table-icon risk">✕ 高リスク</span></td></tr>
-          <tr><td>料金</td><td><span class="table-icon safe">✓ ¥300/1回</span></td><td><span class="table-icon risk">✕ 月額¥1,500〜</span></td></tr>
-          <tr><td>データ</td><td><span class="table-icon safe">✓ 端末内のみ</span></td><td><span class="table-icon risk">✕ 海外サーバー送信</span></td></tr>
+          <tr><td>ログイン</td><td class="ct-good">✕ 一切不要</td><td class="ct-bad">◯ ID/パス必須</td></tr>
+          <tr><td>BANリスク</td><td class="ct-good">0%</td><td class="ct-bad">高（凍結多数）</td></tr>
+          <tr><td>データ送信</td><td class="ct-good">なし（端末内完結）</td><td class="ct-bad">あり（海外サーバー）</td></tr>
+          <tr><td>料金</td><td class="ct-good">無料〜¥330 買い切り</td><td class="ct-bad">月額¥1,000〜</td></tr>
+          <tr><td>解析精度</td><td class="ct-good">公式データ100%</td><td class="ct-bad">不完全・エラー多発</td></tr>
         </tbody>
       </table>
     </div>
+    <p class="compare-note">「安全を削ってまで、片想いを知りたくないですよね。」</p>
   </div>
 </section>
 
-<!-- ═══ HOW IT WORKS ═══ -->
-<section class="steps-section fade-in-section">
-  <div class="steps-container">
-    <h2>使い方はかんたん3ステップ</h2>
+<section id="steps-section" class="lp-section fade-in-section">
+  <div class="section-inner">
+    <h2 class="section-heading">かんたん3ステップ</h2>
+    <p class="section-sub">所要時間：約3分</p>
     <div class="steps-grid">
-      <div class="step-card active">
+      <div class="step-card">
         <div class="step-number">1</div>
-        <h3>データを取得</h3>
-        <p>Instagramの設定から「個人データをダウンロード」→「フォロワーとフォロー中」のみ→JSON形式でリクエスト。</p>
-        <details class="step-details">
-          <summary>詳しい手順を見る</summary>
-          <ol>
-            <li>Instagramアプリ →「設定」→「アカウントセンター」</li>
-            <li>「あなたの情報とアクセス許可」→「情報をダウンロード」</li>
-            <li>対象アカウントを選択し「一部の情報」を選ぶ</li>
-            <li>「フォロワーとフォロー中」のみにチェック</li>
-            <li>形式は必ず <strong>JSON</strong> を選択</li>
-            <li>メールでZIPファイルを受信（数分〜48時間）</li>
-          </ol>
-        </details>
+        <h3>Instagramからデータを取る</h3>
+        <p>設定 → 個人データ → ダウンロードをリクエスト<br><small>（届くまで数分〜数時間）</small></p>
       </div>
       <div class="step-card">
         <div class="step-number">2</div>
-        <h3>ファイルをアップロード</h3>
-        <p>受け取ったZIPファイルをmietaにドロップ。サーバー送信なし、ブラウザ内で処理。</p>
+        <h3>ZIPをここにポイッ</h3>
+        <p>ダウンロードしたZIPをドラッグ＆ドロップ<br><small>（クリックでもOK）</small></p>
       </div>
       <div class="step-card">
         <div class="step-number">3</div>
-        <h3>結果を確認</h3>
-        <p>「片想い」ユーザーが即座にリスト表示。フォロバ率もひと目でわかります。</p>
+        <h3>片想いリストが即表示</h3>
+        <p>「あなただけがフォローしてる人」が一瞬でわかる</p>
+      </div>
+    </div>
+    <div class="steps-cta">
+      <button class="steps-cta-btn" onclick="Mieta.enterApp()">いますぐ試してみる →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PREMIUM ═══ -->
+<section id="premium-section" class="lp-section lp-section--gray fade-in-section">
+  <div class="section-inner">
+    <h2 class="section-heading">mieta+ ですべて見放題</h2>
+    <p class="section-sub">無料版でも「何人いるか」はわかります。<br>でも<strong>誰なのか</strong>を知りたいなら。</p>
+    <div class="premium-features">
+      <div class="pf-item"><span class="pf-check">✓</span>全ユーザーの一覧表示</div>
+      <div class="pf-item"><span class="pf-check">✓</span>名前順・フォロー日順でソート</div>
+      <div class="pf-item"><span class="pf-check">✓</span>一括コピー＆メモ帳に貼れる形式</div>
+      <div class="pf-item"><span class="pf-check">✓</span>何度でも再解析OK（買い切り）</div>
+    </div>
+    <div class="premium-price">
+      <span class="price-amount">¥330</span><span class="price-note">（税込）・買い切り</span>
+    </div>
+    <p class="premium-note">自動更新も月額も一切なし。一度買えばずっと使えます。</p>
+    <button class="premium-cta" onclick="Mieta.enterApp()">¥330で全リストを解除する</button>
+  </div>
+</section>
+
+<section id="faq-section" class="lp-section fade-in-section">
+  <div class="section-inner">
+    <h2 class="section-heading">よくある質問</h2>
+    <div class="faq-list">
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">本当にログインしなくていいの？<span class="faq-toggle">+</span></div>
+        <div class="faq-a">はい、一切不要です。Instagram公式の「データダウンロード」機能で取得したZIPファイルの中のJSONだけ読みます。ID・パスワードを入力する画面は一切ありません。</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">データはどこかに送信されますか？<span class="faq-toggle">+</span></div>
+        <div class="faq-a">一切送信されません。すべてブラウザ内（あなたの端末内）で完結します。サーバーにデータが残ることはありません。ページを閉じればデータも消えます。</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">無料版と有料版の違いは？<span class="faq-toggle">+</span></div>
+        <div class="faq-a">無料版では「何人が片想い状態か」がわかります。有料版（mieta+）では「誰なのか」が全部わかります。¥330の買い切りで、自動更新や月額は一切ありません。</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ FAQ ═══ -->
-<section class="faq-section fade-in-section">
-  <div class="faq-container">
-    <h2>よくある質問</h2>
-    <div class="faq-item">
-      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
-        本当にログインしなくて大丈夫ですか？
-        <span class="faq-toggle">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>はい。mietaはInstagram公式の「データダウンロード」機能で取得したZIPファイルを読み取るだけです。ID・パスワードを入力する画面は一切ありません。</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
-        データはどこかに送信されますか？
-        <span class="faq-toggle">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>いいえ。すべてブラウザ内で処理され、外部サーバーへの送信は一切ありません。ページを閉じればデータも消えます。</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
-        無料で使えますか？
-        <span class="faq-toggle">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>基本機能は無料です。全リストの表示はmieta+（¥330・買い切り）で解放されます。月額課金や自動更新はありません。</p>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- ═══ FOOTER ═══ -->
+<footer class="lp-footer">
+  <p>© 2026 mieta</p>
+</footer>
 
 <!-- ═══════════════════════════════════════
      APP: Service Screens
