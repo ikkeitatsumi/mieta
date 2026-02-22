@@ -109,11 +109,12 @@ button { font-family: inherit; }
   opacity: 0; animation: logoTextReveal 1s ease 1.5s forwards;
 }
 .nav-logo-svg {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 .hero-pro-btn {
   position: absolute; top: max(18px, env(safe-area-inset-top)); right: max(24px, env(safe-area-inset-right));
@@ -332,8 +333,18 @@ button { font-family: inherit; }
   display: flex; align-items: center; justify-content: space-between;
 }
 .nav-logo {
+  display: inline-flex; align-items: center; gap: 8px;
   font-size: 20px; font-weight: 600; letter-spacing: -0.03em;
-  color: var(--jet); background: none; border: none; cursor: pointer; padding: 0;
+  color: var(--jet); background: none; border: none; cursor: pointer;
+  padding: 6px 14px 6px 10px; border-radius: 12px;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.nav-logo:hover {
+  background: rgba(0,0,0,0.04);
+}
+.nav-logo-text {
+  font-size: 16px; font-weight: 600; letter-spacing: 0.04em;
+  color: var(--jet);
 }
 .nav-right { display: flex; align-items: center; gap: 16px; }
 .nav-link {
@@ -1359,7 +1370,7 @@ a.user-name:hover { color: var(--accent); }
   <!-- Navbar -->
   <nav id="navbar">
     <div class="nav-inner">
-      <button class="nav-logo" onclick="Mieta.reset()">
+      <button class="nav-logo" onclick="Mieta.reset()" title="トップに戻る">
         <div class="nav-logo-svg">
           <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(29,29,31,0.4)" stroke-width="1.5"/>
@@ -1371,6 +1382,7 @@ a.user-name:hover { color: var(--accent); }
             <circle cx="100" cy="180" r="1.8" fill="rgba(29,29,31,0.3)"/>
           </svg>
         </div>
+        <span class="nav-logo-text">mieta</span>
       </button>
       <div class="nav-right">
         <button class="nav-link" onclick="Mieta.goToScreen('guide')">使い方</button>
