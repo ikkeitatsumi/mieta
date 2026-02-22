@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#FFFFFF">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>mieta — つながりを、透明に。</title>
-<meta name="description" content="Instagramのフォロー関係をブラウザだけで解析。データはどこにも送信されません。">
+<title>mieta — インスタの片想いチェッカー | ログイン不要で安全にフォロバ確認</title>
+<meta name="description" content="Instagramの「フォローしてるのにフォロバされていない人」をログイン不要で安全にチェック。パスワード入力なし、データはブラウザ内で完結。">
 <!-- OGP -->
-<meta property="og:title" content="mieta — つながりを、透明に。">
-<meta property="og:description" content="Instagramのフォロー関係を、あなたのブラウザだけで解析。フォロバされていない人が一目でわかる。">
+<meta property="og:title" content="mieta — インスタの片想いチェッカー">
+<meta property="og:description" content="フォローしてるのにフォロバされていない人をログイン不要で安全にチェック。パスワード不要、データはブラウザ内で完結。">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mieta">
-<meta name="twitter:description" content="つながりを、透明に。Instagramフォロー関係解析ツール。">
+<meta name="twitter:title" content="mieta — インスタの片想いチェッカー">
+<meta name="twitter:description" content="インスタの片想いをひと目で確認。ログイン不要・データはブラウザ内で完結。">
 <!-- Favicon -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231D1D1F'/><text x='50' y='68' font-family='system-ui' font-size='42' font-weight='600' fill='white' text-anchor='middle'>m</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231D1D1F'/><text x='50' y='68' font-family='system-ui' font-size='42' font-weight='600' fill='white' text-anchor='middle'>m</text></svg>">
@@ -51,11 +51,13 @@
   --ease-out: cubic-bezier(.16,1,.3,1);
   --ease-smooth: cubic-bezier(.4,0,.2,1);
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
+  --ig-gradient: linear-gradient(135deg, #833AB4, #E1306C, #F77737);
+  --ig-gradient-light: linear-gradient(135deg, rgba(131,58,180,0.1), rgba(225,48,108,0.1), rgba(247,119,55,0.1));
 }
 
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-family: var(--font); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
-body { overflow-x: hidden; position: relative; background: #000; color: var(--jet); }
+body { overflow-x: hidden; position: relative; background: #FFFFFF; color: var(--jet); }
 ::selection { background: rgba(0,113,227,0.15); }
 input::placeholder { color: var(--sub); }
 button { font-family: inherit; }
@@ -203,28 +205,74 @@ button { font-family: inherit; }
   opacity: 0; animation: hSubReveal 0.8s var(--ease-out) 1.9s forwards;
 }
 
+/* ═══ HERO CATCHCOPY ═══ */
+.hero-catchcopy {
+  text-align: center;
+  margin-top: 24px;
+}
+.hero-catchcopy h2 {
+  font-size: clamp(22px, 4.5vw, 32px);
+  font-weight: 700;
+  color: var(--jet);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  animation: hSubReveal 0.8s var(--ease-out) 2.0s forwards;
+}
+.hero-catchcopy .hero-subcopy {
+  font-size: clamp(12px, 2vw, 15px);
+  color: var(--sub);
+  line-height: 1.8;
+  margin-top: 16px;
+  opacity: 0;
+  animation: hSubReveal 0.8s var(--ease-out) 2.3s forwards;
+}
+.hero-catchcopy .hero-badges {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  opacity: 0;
+  animation: hSubReveal 0.8s var(--ease-out) 2.5s forwards;
+}
+.hero-catchcopy .hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--jet);
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: var(--off-white);
+  border: 1px solid var(--border);
+}
+.hero-badge .badge-icon {
+  font-size: 14px;
+}
+
 /* CTA on hero */
 .hero-cta {
-  margin-top: 36px; pointer-events: auto;
-  opacity: 0; animation: heroFadeUp 1s var(--ease-out) 2.3s forwards;
+  margin-top: 32px; pointer-events: auto;
+  opacity: 0; animation: heroFadeUp 1s var(--ease-out) 2.7s forwards;
 }
 .hero-cta-btn {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 32px; border-radius: 100px;
-  background: rgba(29,29,31,0.06);
-  border: 1px solid rgba(29,29,31,0.10);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  color: rgba(29,29,31,0.7); font-size: 15px; font-weight: 400;
+  padding: 16px 36px; border-radius: 100px;
+  background: var(--ig-gradient);
+  border: none;
+  color: #FFFFFF; font-size: 16px; font-weight: 600;
   cursor: pointer; letter-spacing: 0.02em;
   transition: all 0.4s ease;
-  -webkit-tap-highlight-color: rgba(29,29,31,0.05);
+  -webkit-tap-highlight-color: rgba(225,48,108,0.1);
   touch-action: manipulation;
   position: relative; z-index: 20;
+  box-shadow: 0 4px 20px rgba(225,48,108,0.25);
 }
 .hero-cta-btn:hover {
-  background: rgba(29,29,31,0.10);
-  border-color: rgba(29,29,31,0.18);
-  color: #1D1D1F; transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(225,48,108,0.35);
 }
 .hero-cta-btn svg { transition: transform 0.3s ease; }
 .hero-cta-btn:hover svg { transform: translateX(3px); }
@@ -710,7 +758,7 @@ a.user-name:hover { color: var(--accent); }
   z-index: 2;
 }
 .trust-container {
-  max-width: 1080px;
+  max-width: 800px;
   margin: 0 auto;
 }
 .trust-header {
@@ -855,6 +903,220 @@ a.user-name:hover { color: var(--accent); }
   margin-bottom: 0;
 }
 
+/* ═══ HOW IT WORKS (3-Step) ═══ */
+.steps-section {
+  padding: 80px 24px;
+  background: var(--off-white);
+}
+.steps-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.steps-section h2 {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  text-align: center;
+  color: var(--jet);
+  margin-bottom: 12px;
+}
+.steps-section .steps-sub {
+  text-align: center;
+  color: var(--sub);
+  font-size: 15px;
+  margin-bottom: 48px;
+}
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 640px) {
+  .steps-grid { grid-template-columns: 1fr; gap: 20px; }
+}
+.step-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  transition: transform 0.3s var(--ease-out);
+}
+.step-card:hover {
+  transform: translateY(-4px);
+}
+.step-card .step-number {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--ig-gradient);
+  color: #fff;
+  font-size: 20px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+.step-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--jet);
+  margin-bottom: 10px;
+}
+.step-card p {
+  font-size: 14px;
+  color: var(--sub);
+  line-height: 1.7;
+}
+
+/* ═══ SAFETY SECTION ═══ */
+.safety-section {
+  padding: 80px 24px;
+  background: var(--white);
+}
+.safety-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.safety-section h2 {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  color: var(--jet);
+  margin-bottom: 12px;
+}
+.safety-section .safety-sub {
+  color: var(--sub);
+  font-size: 15px;
+  margin-bottom: 48px;
+}
+.safety-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  text-align: left;
+}
+@media (max-width: 640px) {
+  .safety-grid { grid-template-columns: 1fr; }
+}
+.safety-card {
+  background: var(--off-white);
+  border-radius: var(--radius-md);
+  padding: 28px 24px;
+  border: 1px solid var(--border);
+}
+.safety-card .safety-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.safety-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--jet);
+  margin-bottom: 8px;
+}
+.safety-card p {
+  font-size: 14px;
+  color: var(--sub);
+  line-height: 1.7;
+}
+.ig-underline {
+  background-image: var(--ig-gradient-light);
+  background-repeat: no-repeat;
+  background-size: 100% 40%;
+  background-position: 0 90%;
+  padding: 0 2px;
+}
+
+/* ═══ FAQ SECTION ═══ */
+.faq-section {
+  padding: 80px 24px;
+  background: var(--off-white);
+}
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.faq-section h2 {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  text-align: center;
+  color: var(--jet);
+  margin-bottom: 40px;
+}
+.faq-item {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.faq-question {
+  width: 100%;
+  padding: 20px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--jet);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.faq-question:hover { background: rgba(0,0,0,0.02); }
+.faq-question .faq-toggle {
+  font-size: 18px;
+  color: var(--sub);
+  transition: transform 0.3s var(--ease-out);
+}
+.faq-item.open .faq-toggle {
+  transform: rotate(45deg);
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s var(--ease-out), padding 0.4s var(--ease-out);
+}
+.faq-item.open .faq-answer {
+  max-height: 300px;
+  padding: 0 24px 20px;
+}
+.faq-answer p {
+  font-size: 14px;
+  color: var(--sub);
+  line-height: 1.8;
+}
+
+/* ═══ SEO ARTICLE SECTION ═══ */
+.seo-section {
+  padding: 60px 24px;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+}
+.seo-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.seo-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--jet);
+  margin-bottom: 20px;
+}
+.seo-section p {
+  font-size: 14px;
+  color: var(--sub);
+  line-height: 1.9;
+  margin-bottom: 16px;
+}
+.seo-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--jet);
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
 /* ═══ SHARE BUTTONS ═══ */
 .share-actions {
   display: flex;
@@ -977,52 +1239,37 @@ a.user-name:hover { color: var(--accent); }
     <button class="hero-pro-btn" onclick="Mieta.handleProButtonClick()">mieta+</button>
 
     <div class="hero-center-logo">
-      <svg class="logo-svg" width="200" height="170" viewBox="0 0 200 170" fill="none"
-           style="overflow:visible;">
-        <!-- Outer Orbit Circle -->
-        <circle cx="100" cy="84" r="68" stroke="#1D1D1F" stroke-width="1.6" fill="none"
-                stroke-dasharray="427.26" stroke-dashoffset="427.26"
-                style="animation:hOrbitDraw 1.0s var(--ease-out) 0s forwards;transform-origin:100px 84px;opacity:0;"/>
-        <!-- Orbit Dot (top-left) -->
-        <circle cx="52.4" cy="35" r="4.4" fill="#1D1D1F"
-                style="animation:hDotSlide 0.8s var(--ease-out) 0.15s forwards;opacity:0;transform-origin:52.4px 35px;"/>
-        <!-- Decorative Dots -->
-        <circle cx="150.5" cy="134.5" r="2.64" fill="rgba(29,29,31,0.15)"
-                style="animation:hDotSlide 0.6s var(--ease-out) 0.30s forwards;opacity:0;"/>
-        <circle cx="54.3" cy="129.7" r="2.64" fill="rgba(29,29,31,0.15)"
-                style="animation:hDotSlide 0.6s var(--ease-out) 0.42s forwards;opacity:0;"/>
-        <circle cx="31" cy="58.9" r="2.64" fill="rgba(29,29,31,0.15)"
-                style="animation:hDotSlide 0.6s var(--ease-out) 0.54s forwards;opacity:0;"/>
-        <circle cx="144.6" cy="30.9" r="2.64" fill="rgba(29,29,31,0.15)"
-                style="animation:hDotSlide 0.6s var(--ease-out) 0.66s forwards;opacity:0;"/>
-        <!-- Connecting Lines -->
-        <line x1="150.5" y1="134.5" x2="54.3" y2="129.7" stroke="rgba(29,29,31,0.12)" stroke-width="0.8"
-              style="animation:hLineFade 0.8s var(--ease-out) 0.5s forwards;opacity:0;"/>
-        <line x1="31" y1="58.9" x2="144.6" y2="30.9" stroke="rgba(29,29,31,0.12)" stroke-width="0.8"
-              style="animation:hLineFade 0.8s var(--ease-out) 0.65s forwards;opacity:0;"/>
-        <!-- Inner Circle (Iris - outer) -->
-        <circle cx="100" cy="84" r="44" stroke="#1D1D1F" stroke-width="1.92" fill="none"
-                style="animation:hIrisScale 0.9s var(--ease-out) 0.5s forwards;opacity:0;transform-origin:100px 84px;"/>
-        <!-- Inner Circle (Iris - inner, dashed) -->
-        <circle cx="100" cy="84" r="36" stroke="#1D1D1F" stroke-width="1.28" fill="none"
-                stroke-dasharray="18 9"
-                style="animation:hIrisScale2 0.8s var(--ease-out) 0.65s forwards;opacity:0;transform-origin:100px 84px;"/>
-        <!-- Light Sweep (fan) -->
-        <path d="M 100 84 L 124 55.4 A 37.4 37.4 0 0 0 87.2 48.9 Z"
-              stroke="#1D1D1F" stroke-width="0.96" fill="rgba(29,29,31,0.03)"
-              stroke-linecap="round"
-              style="animation:hLightSweep 0.9s var(--ease-out) 1.2s forwards;opacity:0;transform-origin:100px 84px;"/>
-        <!-- Center Dot -->
-        <circle cx="100" cy="84" r="5.28" fill="#1D1D1F"
-                style="animation:hCenterDot 0.5s var(--ease-out) 0.8s forwards;opacity:0;transform-origin:100px 84px;"/>
+      <svg class="logo-svg" width="200" height="170" viewBox="0 0 200 170" fill="none" style="overflow:visible;">
+        <circle cx="100" cy="84" r="68" stroke="#1D1D1F" stroke-width="1.6" fill="none" stroke-dasharray="427.26" stroke-dashoffset="427.26" style="animation:hOrbitDraw 1.0s var(--ease-out) 0s forwards;transform-origin:100px 84px;opacity:0;"/>
+        <circle cx="52.4" cy="35" r="4.4" fill="#1D1D1F" style="animation:hDotSlide 0.8s var(--ease-out) 0.15s forwards;opacity:0;transform-origin:52.4px 35px;"/>
+        <circle cx="150.5" cy="134.5" r="2.64" fill="rgba(29,29,31,0.15)" style="animation:hDotSlide 0.6s var(--ease-out) 0.30s forwards;opacity:0;"/>
+        <circle cx="54.3" cy="129.7" r="2.64" fill="rgba(29,29,31,0.15)" style="animation:hDotSlide 0.6s var(--ease-out) 0.42s forwards;opacity:0;"/>
+        <circle cx="31" cy="58.9" r="2.64" fill="rgba(29,29,31,0.15)" style="animation:hDotSlide 0.6s var(--ease-out) 0.54s forwards;opacity:0;"/>
+        <circle cx="144.6" cy="30.9" r="2.64" fill="rgba(29,29,31,0.15)" style="animation:hDotSlide 0.6s var(--ease-out) 0.66s forwards;opacity:0;"/>
+        <line x1="150.5" y1="134.5" x2="54.3" y2="129.7" stroke="rgba(29,29,31,0.12)" stroke-width="0.8" style="animation:hLineFade 0.8s var(--ease-out) 0.5s forwards;opacity:0;"/>
+        <line x1="31" y1="58.9" x2="144.6" y2="30.9" stroke="rgba(29,29,31,0.12)" stroke-width="0.8" style="animation:hLineFade 0.8s var(--ease-out) 0.65s forwards;opacity:0;"/>
+        <circle cx="100" cy="84" r="44" stroke="#1D1D1F" stroke-width="1.92" fill="none" style="animation:hIrisScale 0.9s var(--ease-out) 0.5s forwards;opacity:0;transform-origin:100px 84px;"/>
+        <circle cx="100" cy="84" r="36" stroke="#1D1D1F" stroke-width="1.28" fill="none" stroke-dasharray="18 9" style="animation:hIrisScale2 0.8s var(--ease-out) 0.65s forwards;opacity:0;transform-origin:100px 84px;"/>
+        <path d="M 100 84 L 124 55.4 A 37.4 37.4 0 0 0 87.2 48.9 Z" stroke="#1D1D1F" stroke-width="0.96" fill="rgba(29,29,31,0.03)" stroke-linecap="round" style="animation:hLightSweep 0.9s var(--ease-out) 1.2s forwards;opacity:0;transform-origin:100px 84px;"/>
+        <circle cx="100" cy="84" r="5.28" fill="#1D1D1F" style="animation:hCenterDot 0.5s var(--ease-out) 0.8s forwards;opacity:0;transform-origin:100px 84px;"/>
       </svg>
       <div class="hero-logo-type">mieta</div>
-      <div class="hero-logo-sub">The Reflection of Connection</div>
+      <div class="hero-logo-sub">Instagram Follow-back Checker</div>
+    </div>
+
+    <div class="hero-catchcopy">
+      <h2>インスタの「片想い」を<br>ひと目で確認。</h2>
+      <p class="hero-subcopy">フォローしているのに返してくれないユーザーを、<br>ログイン不要で安全にチェック。</p>
+      <div class="hero-badges">
+        <span class="hero-badge"><span class="badge-icon">🔒</span>ログイン不要</span>
+        <span class="hero-badge"><span class="badge-icon">🛡️</span>BAN リスク 0%</span>
+        <span class="hero-badge"><span class="badge-icon">📱</span>ブラウザ完結</span>
+      </div>
     </div>
 
     <div class="hero-cta">
       <button class="hero-cta-btn" onclick="Mieta.enterApp()" ontouchend="this.click()">
-        フォロー関係を解析する
+        無料で解析する
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
     </div>
@@ -1105,6 +1352,122 @@ a.user-name:hover { color: var(--accent); }
         <p>Instagram公式APIには、閲覧履歴（足跡）を外部に提供する機能は存在しません。「誰がプロフィールを見たか教える」と謳うアプリは、例外なくあなたのデータを盗むための詐欺です。</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="steps-section fade-in-section">
+  <div class="steps-container">
+    <h2>使い方はかんたん3ステップ</h2>
+    <p class="steps-sub">パスワードの入力は一切不要。あなたのデータはブラウザ内だけで処理されます。</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3>データを準備</h3>
+        <p>Instagramの設定から「個人データをダウンロード」を選択。フォロー情報のZIPファイルを取得します。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3>ファイルをアップロード</h3>
+        <p>ダウンロードしたZIPファイルをmietaにドロップ。サーバーへの送信は一切ありません。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3>結果を確認</h3>
+        <p>「あなただけがフォローしている人」が即座にリスト表示。フォロバ率もひと目でわかります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SAFETY SECTION ═══ -->
+<section class="safety-section fade-in-section">
+  <div class="safety-container">
+    <h2><span class="ig-underline">ログイン不要</span>だから、安全</h2>
+    <p class="safety-sub">Instagram関連ツールで最も危険なのは、パスワードを入力すること。mietaはその必要がありません。</p>
+    <div class="safety-grid">
+      <div class="safety-card">
+        <div class="safety-icon">🔐</div>
+        <h3>パスワード入力なし</h3>
+        <p>IDもパスワードも一切不要。アカウント乗っ取りのリスクはゼロです。</p>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon">💻</div>
+        <h3>ブラウザ内で完結</h3>
+        <p>データはサーバーに送信されません。完全オフライン感覚で利用できます。</p>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon">✅</div>
+        <h3>Instagram規約に準拠</h3>
+        <p>公式のデータダウンロード機能を使用。BANリスクは0%です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ SECTION ═══ -->
+<section class="faq-section fade-in-section">
+  <div class="faq-container">
+    <h2>よくある質問</h2>
+    <div class="faq-item">
+      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+        本当にログインしなくて大丈夫ですか？
+        <span class="faq-toggle">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>はい、完全にログイン不要です。mietaはInstagram公式の「データダウンロード」機能で取得したZIPファイルを読み取るだけです。あなたのIDやパスワードを入力する画面は一切ありません。</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+        データはどこかに送信されますか？
+        <span class="faq-toggle">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>いいえ。アップロードされたファイルはすべてあなたのブラウザ内（端末上）だけで処理されます。外部サーバーへの送信は一切行いません。ページを閉じればデータも消えます。</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+        アカウントがBANされるリスクはありますか？
+        <span class="faq-toggle">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>ありません。mietaはInstagramのサーバーに一切アクセスしません。公式が提供するデータダウンロード機能を使うだけなので、利用規約に完全に準拠しています。</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+        無料で使えますか？
+        <span class="faq-toggle">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>基本機能は無料でお使いいただけます。片想いユーザーの一部を確認できます。全リストの表示や詳細分析は、mieta+（¥330・買い切り）で解放されます。月額課金や自動更新はありません。</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+        ZIPファイルはどうやって取得しますか？
+        <span class="faq-toggle">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Instagramアプリの「設定」→「アカウントセンター」→「あなたの情報とアクセス許可」→「個人データをダウンロード」から取得できます。形式はJSONを選んでください。通常数分〜48時間で届きます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SEO ARTICLE ═══ -->
+<section class="seo-section">
+  <div class="seo-container">
+    <h2>なぜ公式アプリではなくmietaが必要なのか</h2>
+    <p>Instagramの公式アプリには、「自分がフォローしているのにフォローバックされていない人」を一覧で確認する機能がありません。フォロー中リストとフォロワーリストを目視で比較する必要があり、フォロー数が多いほど現実的ではありません。</p>
+
+    <h3>サードパーティアプリの危険性</h3>
+    <p>App StoreやGoogle Playには「フォロバチェッカー」を謳うアプリが多数存在しますが、その多くはInstagramのIDとパスワードの入力を求めます。これはInstagramの利用規約に明確に違反しており、アカウントの永久凍結（BAN）の原因となります。さらに、入力した認証情報が第三者に悪用され、アカウント乗っ取りにつながるケースも報告されています。</p>
+
+    <h3>mietaが選ばれる理由</h3>
+    <p>mietaはInstagram公式の「個人データダウンロード」機能を利用します。これはInstagramが正式に提供している機能であり、利用規約に完全に準拠しています。ダウンロードしたZIPファイルをブラウザにアップロードするだけで、サーバーへの通信は一切発生しません。パスワードの入力も不要です。安全に、そして正確にフォロー関係を分析できる、それがmietaです。</p>
   </div>
 </section>
 
