@@ -392,34 +392,50 @@ button { font-family: inherit; }
   box-shadow: var(--shadow-md); overflow: hidden;
 }
 .guide-deeplink {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 16px 24px;
-  background: linear-gradient(135deg, var(--accent), var(--purple));
-  color: #fff; text-decoration: none; font-size: 15px; font-weight: 500;
-  transition: opacity 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 20px 28px;
+  background: var(--ig-gradient);
+  color: #fff; text-decoration: none; font-size: 17px; font-weight: 600;
+  border-radius: 16px 16px 0 0;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 20px rgba(225,48,108,0.25);
+  transition: all 0.3s var(--ease-out);
 }
-.guide-deeplink:hover { opacity: 0.9; }
-.guide-deeplink svg { flex-shrink: 0; }
+.guide-deeplink:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(225,48,108,0.35); }
+.guide-deeplink svg { flex-shrink: 0; width: 20px; height: 20px; }
+.guide-deeplink-label {
+  display: block; text-align: center;
+  font-size: 12px; font-weight: 500; color: var(--sub);
+  padding: 10px 24px 0; letter-spacing: 0.05em;
+}
 .guide-steps { padding: 8px 0; }
 .guide-step {
   display: flex; gap: 16px; padding: 18px 24px;
   border-bottom: 0.5px solid var(--border); align-items: flex-start;
 }
 .guide-step:last-child { border-bottom: none; }
-.step-num {
-  width: 28px; height: 28px; border-radius: 50%; background: var(--off-white);
+.guide-step-num {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--ig-gradient);
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 600; color: var(--jet); flex-shrink: 0;
+  font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
 }
-.step-text { font-size: 14px; color: var(--jet); line-height: 1.6; padding-top: 3px; }
+.step-text { font-size: 14px; color: var(--jet); line-height: 1.6; padding-top: 5px; }
 .step-text small { display: block; font-size: 12px; color: var(--sub); margin-top: 2px; }
 .guide-next {
-  width: 100%; max-width: 560px; margin-top: 24px; padding: 16px;
-  border-radius: var(--radius-md); background: var(--jet); color: #fff;
-  border: none; font-size: 16px; font-weight: 500; cursor: pointer;
-  transition: all 0.3s ease;
+  width: 100%; max-width: 560px; margin-top: 32px; padding: 20px;
+  border-radius: 9999px;
+  background: var(--ig-gradient);
+  color: #fff; border: none;
+  font-size: 18px; font-weight: 600; cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: 0 6px 28px rgba(225,48,108,0.3);
+  transition: all 0.4s var(--ease-out);
 }
-.guide-next:hover { background: #333; transform: translateY(-1px); }
+.guide-next:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 40px rgba(225,48,108,0.4); }
+.guide-next-sub {
+  display: block; text-align: center;
+  font-size: 13px; color: var(--sub); margin-top: 12px;
+}
 
 /* ═══ SCREEN: UPLOAD ═══ */
 #screen-upload { padding: 100px 24px 60px; }
@@ -1372,20 +1388,22 @@ a.user-name:hover { color: var(--accent); }
       <p>Instagramのフォロー関係を、あなたのブラウザだけで解析。</p>
     </div>
     <div class="guide-card">
+      <p class="guide-deeplink-label">STEP 1 — まずはデータを取得</p>
       <a class="guide-deeplink" href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Instagramのデータダウンロードページを開く
       </a>
       <div class="guide-steps">
-        <div class="guide-step"><div class="step-num">1</div><div class="step-text">上のリンクからInstagramのデータダウンロードページを開きます</div></div>
-        <div class="guide-step"><div class="step-num">2</div><div class="step-text">「情報をダウンロード」または「Download your information」を選択<small>※ アカウントセンターにログインが必要です</small></div></div>
-        <div class="guide-step"><div class="step-num">3</div><div class="step-text">対象アカウントを選択し「一部の情報」を選びます</div></div>
-        <div class="guide-step"><div class="step-num">4</div><div class="step-text">「フォロワーとフォロー中」のみにチェックを入れます<small>※ 必要最小限のデータだけで解析できます</small></div></div>
-        <div class="guide-step"><div class="step-num">5</div><div class="step-text">形式は必ず <strong>JSON</strong> を選択してダウンロードをリクエスト</div></div>
-        <div class="guide-step"><div class="step-num">6</div><div class="step-text">メールでZIPファイルを受信したら、次のステップへ進みます<small>※ 通常数分〜48時間で届きます</small></div></div>
+        <div class="guide-step"><div class="guide-step-num">1</div><div class="step-text">上のボタンからInstagramのデータダウンロードページを開きます</div></div>
+        <div class="guide-step"><div class="guide-step-num">2</div><div class="step-text">「情報をダウンロード」または「Download your information」を選択<small>※ アカウントセンターにログインが必要です</small></div></div>
+        <div class="guide-step"><div class="guide-step-num">3</div><div class="step-text">対象アカウントを選択し「一部の情報」を選びます</div></div>
+        <div class="guide-step"><div class="guide-step-num">4</div><div class="step-text">「フォロワーとフォロー中」のみにチェック<small>※ 必要最小限のデータだけで解析できます</small></div></div>
+        <div class="guide-step"><div class="guide-step-num">5</div><div class="step-text">形式は必ず <strong>JSON</strong> を選択してダウンロードをリクエスト</div></div>
+        <div class="guide-step"><div class="guide-step-num">6</div><div class="step-text">メールでZIPファイルを受信したら、下のボタンへ！<small>※ 通常数分〜48時間で届きます</small></div></div>
       </div>
     </div>
-    <button class="guide-next" onclick="Mieta.goToScreen('upload')">ZIPファイルをアップロードする →</button>
+    <button class="guide-next" onclick="Mieta.goToScreen('upload')">📁 ZIPファイルをアップロードする</button>
+    <p class="guide-next-sub">ダウンロードしたZIPをアップロードして解析スタート</p>
   </div>
 
   <!-- Screen: Upload -->
@@ -1775,9 +1793,9 @@ const Mieta = (function(){
   function enterApp(){
     state.phase='app';
     const hero=$('#hero-section');
-    const trust=$('#trust-section');
     hero.classList.add('hidden');
-    if(trust) trust.style.display='none';
+    // Hide all LP sections
+    $$('.lp-section, .lp-footer').forEach(s=>s.style.display='none');
     setTimeout(()=>{
       stopLens();
       hero.style.display='none';
@@ -1799,7 +1817,8 @@ const Mieta = (function(){
     $('#app-section').classList.remove('active');
     $('#navbar').classList.remove('active');
     $('#noise-overlay').classList.remove('active');
-    const trust=$('#trust-section'); if(trust) trust.style.display='';
+    // Restore all LP sections
+    $$('.lp-section, .lp-footer').forEach(s=>s.style.display='');
     document.body.style.background='#FFFFFF';
 
     const hero=$('#hero-section');
