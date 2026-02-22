@@ -650,7 +650,42 @@ a.user-name:hover { color: var(--accent); }
   transition: opacity 0.2s, transform 0.2s;
 }
 .premium-buy:hover { opacity: 0.9; transform: translateY(-1px); }
-.premium-price { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 8px; }
+.premium-price { font-size: 12px; color: var(--sub); margin-top: 8px; }
+
+/* Promo code */
+.promo-code-link {
+  display: inline-block; margin-top: 16px; padding: 0;
+  background: none; border: none; cursor: pointer;
+  font-size: 13px; color: var(--accent); text-decoration: underline;
+  transition: opacity 0.2s;
+}
+.promo-code-link:hover { opacity: 0.7; }
+.promo-input-area { margin-top: 14px; }
+.promo-input-row {
+  display: flex; gap: 8px; justify-content: center;
+  max-width: 320px; margin: 0 auto;
+}
+.promo-input {
+  flex: 1; padding: 10px 14px; font-size: 14px;
+  border: 1.5px solid var(--border); border-radius: 10px;
+  background: var(--white); color: var(--jet);
+  font-family: inherit; outline: none;
+  transition: border-color 0.2s;
+}
+.promo-input:focus { border-color: var(--accent); }
+.promo-submit {
+  padding: 10px 20px; border-radius: 10px; border: none;
+  background: var(--accent); color: #fff;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: opacity 0.2s;
+}
+.promo-submit:hover { opacity: 0.85; }
+.promo-error {
+  font-size: 12px; color: var(--red); margin-top: 8px;
+}
+.promo-success {
+  font-size: 13px; color: var(--green); font-weight: 500; margin-top: 8px;
+}
 
 /* ═══ OVERLAYS ═══ */
 
@@ -1516,6 +1551,14 @@ a.user-name:hover { color: var(--accent); }
           mieta+ でロック解除
         </button>
         <p class="premium-price">¥330（税込）· 買い切り</p>
+        <button class="promo-code-link" onclick="Mieta.showPromoInput()">キャンペーンコードをお持ちの方</button>
+        <div class="promo-input-area" id="promo-input-area" style="display:none;">
+          <div class="promo-input-row">
+            <input type="text" id="promo-code-input" class="promo-input" placeholder="コードを入力" autocomplete="off" spellcheck="false">
+            <button class="promo-submit" onclick="Mieta.applyPromoCode()">適用</button>
+          </div>
+          <p class="promo-error" id="promo-error" style="display:none;"></p>
+        </div>
       </div>
       <div class="privacy-footer">
         <div class="badge">
@@ -2557,6 +2600,51 @@ const Mieta = (function(){
     document.querySelectorAll('.fade-in-section').forEach(el => obs.observe(el));
   }
 
+  /* ═══ PROMO CODE ═══ */
+  // SHA-256 hashed promo codes (add more hashes here to create new codes)
+  const PROMO_HASHES = [
+    '32ca32a8d97d077e816fb205ad6d20d1b5b298c6e77812b1d156f722a7f23f0e', // mieta2026
+  ];
+
+  async function sha256(text){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function showPromoInput(){
+    const area = $('#promo-input-area');
+    area.style.display = area.style.display==='none' ? 'block' : 'none';
+    if(area.style.display==='block'){
+      const inp=$('#promo-code-input');
+      inp.value=''; inp.focus();
+      $('#promo-error').style.display='none';
+    }
+  }
+
+  async function applyPromoCode(){
+    const inp=$('#promo-code-input');
+    const code=inp.value.trim();
+    const errEl=$('#promo-error');
+    if(!code){
+      errEl.textContent='コードを入力してください';
+      errEl.className='promo-error'; errEl.style.display='block'; return;
+    }
+    const hash=await sha256(code);
+    if(PROMO_HASHES.includes(hash)){
+      localStorage.setItem(PREMIUM_KEY,'true');
+      state.isPremium=true;
+      errEl.textContent='✓ コードが適用されました！全機能がアンロックされました。';
+      errEl.className='promo-success'; errEl.style.display='block';
+      inp.disabled=true;
+      setTimeout(()=>{ if(state.data) renderList(); },800);
+      toast('mieta+ がアンロックされました');
+    } else {
+      errEl.textContent='無効なコードです。もう一度お確かめください。';
+      errEl.className='promo-error'; errEl.style.display='block';
+      inp.value=''; inp.focus();
+    }
+  }
+
   /* ═══ INIT ═══ */
   function init(){
     initLens();
@@ -2577,7 +2665,7 @@ const Mieta = (function(){
     goToScreen, switchOS, renderList, copyList, shareList, copyShareText, updateShareLinks,
     reset, purchasePremium, closeUnlock, openUnlock,
     switchTab, cycleSort, toast, enterApp,
-    handleProButtonClick, showAuthModal, closeAuth, switchAuthMode, submitAuth, logout,
+    handleProButtonClick, showAuthModal, closeAuth, switchAuthMode, submitAuth, logout, showPromoInput, applyPromoCode,
     openHistory, closeHistory, loadHistoryItem,
   };
 })();
