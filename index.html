@@ -227,55 +227,96 @@ button { font-family: inherit; }
   opacity: 0;
   animation: hSubReveal 0.8s var(--ease-out) 2.3s forwards;
 }
-.hero-catchcopy .hero-badges {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
+/* Primary DL CTA */
+.hero-primary-cta {
+  text-align: center;
+  margin-top: 28px;
+  pointer-events: auto;
   opacity: 0;
-  animation: hSubReveal 0.8s var(--ease-out) 2.5s forwards;
+  animation: hSubReveal 0.8s var(--ease-out) 2.4s forwards;
 }
-.hero-catchcopy .hero-badge {
+.step-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--sub);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero-dl-btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
+  padding: 18px 40px;
+  border-radius: 16px;
+  background: var(--ig-gradient);
+  color: #FFFFFF;
+  font-size: clamp(14px, 2.5vw, 17px);
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  box-shadow: 0 6px 28px rgba(225,48,108,0.3);
+  transition: all 0.4s var(--ease-out);
+}
+.hero-dl-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(225,48,108,0.4);
+}
+.step-hint {
   font-size: 12px;
+  color: var(--sub);
+  margin-top: 12px;
+}
+
+/* Secondary CTA row */
+.hero-cta-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  pointer-events: auto;
+  opacity: 0;
+  animation: heroFadeUp 1s var(--ease-out) 2.8s forwards;
+}
+.hero-badges {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
   font-weight: 500;
-  color: var(--jet);
-  padding: 6px 14px;
+  color: var(--sub);
+  padding: 4px 10px;
   border-radius: 100px;
   background: var(--off-white);
   border: 1px solid var(--border);
 }
-.hero-badge .badge-icon {
-  font-size: 14px;
-}
+.badge-icon { font-size: 12px; }
 
-/* CTA on hero */
-.hero-cta {
-  margin-top: 32px; pointer-events: auto;
-  opacity: 0; animation: heroFadeUp 1s var(--ease-out) 2.7s forwards;
-}
+/* Secondary CTA button */
 .hero-cta-btn {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 16px 36px; border-radius: 100px;
-  background: var(--ig-gradient);
-  border: none;
-  color: #FFFFFF; font-size: 16px; font-weight: 600;
-  cursor: pointer; letter-spacing: 0.02em;
-  transition: all 0.4s ease;
-  -webkit-tap-highlight-color: rgba(225,48,108,0.1);
+  padding: 14px 28px; border-radius: 100px;
+  background: rgba(29,29,31,0.06);
+  border: 1.5px solid rgba(29,29,31,0.12);
+  color: var(--jet); font-size: 14px; font-weight: 500;
+  cursor: pointer; letter-spacing: 0.01em;
+  transition: all 0.3s ease;
   touch-action: manipulation;
-  position: relative; z-index: 20;
-  box-shadow: 0 4px 20px rgba(225,48,108,0.25);
 }
 .hero-cta-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(225,48,108,0.35);
+  background: rgba(29,29,31,0.10);
+  border-color: rgba(29,29,31,0.2);
+  transform: translateY(-1px);
 }
 .hero-cta-btn svg { transition: transform 0.3s ease; }
-.hero-cta-btn:hover svg { transform: translateX(3px); }
+.hero-cta-btn:hover svg { transform: translateY(-2px); }
 
 /* Scroll hint */
 .hero-scroll-hint {
@@ -750,162 +791,95 @@ a.user-name:hover { color: var(--accent); }
 .reset-btn { margin-top: 8px; padding: 0; background: none; border: none; cursor: pointer; font-size: 13px; color: var(--accent); }
 .reset-btn:hover { text-decoration: underline; }
 
-/* ═══ TRUST & TRUTH SECTION ═══ */
-#trust-section {
+/* ═══ WHY MIETA SECTION ═══ */
+.why-section {
   background: var(--white);
-  padding: 80px 24px;
+  padding: 60px 24px;
   position: relative;
   z-index: 2;
 }
-.trust-container {
+.why-container {
   max-width: 800px;
   margin: 0 auto;
 }
-.trust-header {
-  text-align: center;
-  margin-bottom: 80px;
-}
-.trust-header h2 {
-  font-size: clamp(32px, 6vw, 56px);
+.why-section h2 {
+  font-size: clamp(24px, 4vw, 32px);
   font-weight: 700;
-  letter-spacing: -0.04em;
+  text-align: center;
   color: var(--jet);
-  margin-bottom: 24px;
-  opacity: 0;
-  animation: fadeSlide 0.8s var(--ease-out) forwards;
+  margin-bottom: 12px;
 }
-.trust-tagline {
-  font-size: clamp(13px, 2vw, 15px);
+.why-lead {
+  text-align: center;
   color: var(--sub);
-  font-weight: 400;
-  opacity: 0;
-  animation: fadeSlide 0.8s var(--ease-out) 0.2s forwards;
+  font-size: 14px;
+  margin-bottom: 40px;
 }
-.trust-description {
-  font-size: 15px;
-  color: var(--jet);
-  line-height: 1.8;
-  max-width: 680px;
-  margin: 16px auto 0;
-  opacity: 0;
-  animation: fadeSlide 0.8s var(--ease-out) 0.4s forwards;
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
 }
-
-/* Trust sections with fade-in */
-.trust-content-block {
-  margin-bottom: 60px;
-  padding: 48px;
-  border-radius: var(--radius-lg);
+@media (max-width: 640px) {
+  .why-grid { grid-template-columns: 1fr; gap: 12px; }
+}
+.why-card {
+  padding: 24px 20px;
+  border-radius: var(--radius-md);
   background: var(--off-white);
+  border: 1px solid var(--border);
 }
-.trust-content-block.fade-in-section {
-  opacity: 0;
-  transform: translateY(32px);
+.why-card.danger {
+  background: rgba(255,59,48,0.04);
+  border-color: rgba(255,59,48,0.12);
 }
-.trust-content-block.fade-in-section.visible {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
-  background: var(--white);
+.why-icon { font-size: 24px; margin-bottom: 10px; }
+.why-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--jet);
+  margin-bottom: 8px;
 }
-
-/* Comparison Table */
+.why-card p {
+  font-size: 13px;
+  color: var(--sub);
+  line-height: 1.7;
+}
+.why-comparison {
+  border-radius: var(--radius-md);
+  background: var(--off-white);
+  padding: 24px;
+  border: 1px solid var(--border);
+}
+.why-comparison .comparison-table { margin: 0; }
 .comparison-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 32px 0;
 }
 .comparison-table th,
 .comparison-table td {
-  padding: 16px;
+  padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid var(--border);
-  font-size: 14px;
+  font-size: 13px;
 }
 .comparison-table th {
-  background: var(--off-white);
+  background: transparent;
   font-weight: 600;
   color: var(--jet);
+  font-size: 12px;
+  letter-spacing: 0.04em;
 }
-.comparison-table tr:last-child td {
-  border-bottom: none;
-}
-.comparison-table td:first-child {
-  font-weight: 500;
-  color: var(--jet);
-  width: 35%;
-}
-.comparison-table td:nth-child(2) {
-  color: var(--jet);
-  font-weight: 400;
-}
-.comparison-table td:nth-child(3) {
-  color: var(--sub);
-  font-weight: 400;
-}
-.table-icon {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-}
+.comparison-table tr:last-child td { border-bottom: none; }
+.comparison-table td:first-child { font-weight: 500; color: var(--jet); width: 30%; }
+.table-icon { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; font-size: 13px; }
 .table-icon.safe { color: var(--green); }
 .table-icon.risk { color: var(--red); }
 
-/* Ban Warning Card */
-.ban-warning {
-  border-left: 4px solid var(--red);
-  padding: 32px;
-  background: rgba(255,59,48,0.05);
-  border-radius: var(--radius-md);
-  margin: 40px 0;
-}
-.ban-warning h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--jet);
-  letter-spacing: 0.05em;
-  margin-bottom: 16px;
-}
-.ban-warning p {
-  font-size: 14px;
-  color: var(--jet);
-  line-height: 1.8;
-  margin-bottom: 12px;
-}
-.ban-warning p:last-child {
-  margin-bottom: 0;
-  font-weight: 500;
-  color: var(--red);
-}
-
-/* Fraud Education */
-.fraud-section {
-  background: linear-gradient(135deg, rgba(88,86,214,0.04), rgba(0,113,227,0.04));
-  padding: 32px;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(0,113,227,0.1);
-}
-.fraud-section h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--jet);
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
-}
-.fraud-section p {
-  font-size: 14px;
-  color: var(--jet);
-  line-height: 1.8;
-  margin-bottom: 12px;
-}
-.fraud-section p:last-child {
-  margin-bottom: 0;
-}
-
 /* ═══ HOW IT WORKS (3-Step) ═══ */
 .steps-section {
-  padding: 80px 24px;
+  padding: 60px 24px;
   background: var(--off-white);
 }
 .steps-container {
@@ -965,69 +939,33 @@ a.user-name:hover { color: var(--accent); }
   color: var(--sub);
   line-height: 1.7;
 }
-
-/* ═══ SAFETY SECTION ═══ */
-.safety-section {
-  padding: 80px 24px;
-  background: var(--white);
-}
-.safety-container {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-.safety-section h2 {
-  font-size: clamp(24px, 4vw, 32px);
-  font-weight: 700;
-  color: var(--jet);
-  margin-bottom: 12px;
-}
-.safety-section .safety-sub {
-  color: var(--sub);
-  font-size: 15px;
-  margin-bottom: 48px;
-}
-.safety-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+.step-details {
+  margin-top: 12px;
   text-align: left;
 }
-@media (max-width: 640px) {
-  .safety-grid { grid-template-columns: 1fr; }
+.step-details summary {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 4px 0;
 }
-.safety-card {
-  background: var(--off-white);
-  border-radius: var(--radius-md);
-  padding: 28px 24px;
-  border: 1px solid var(--border);
-}
-.safety-card .safety-icon {
-  font-size: 28px;
-  margin-bottom: 12px;
-}
-.safety-card h3 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--jet);
-  margin-bottom: 8px;
-}
-.safety-card p {
-  font-size: 14px;
+.step-details summary:hover { text-decoration: underline; }
+.step-details ol {
+  margin-top: 10px;
+  padding-left: 20px;
+  font-size: 13px;
   color: var(--sub);
-  line-height: 1.7;
+  line-height: 1.9;
 }
-.ig-underline {
-  background-image: var(--ig-gradient-light);
-  background-repeat: no-repeat;
-  background-size: 100% 40%;
-  background-position: 0 90%;
-  padding: 0 2px;
+.step-details ol li {
+  margin-bottom: 4px;
 }
+
 
 /* ═══ FAQ SECTION ═══ */
 .faq-section {
-  padding: 80px 24px;
+  padding: 48px 24px;
   background: var(--off-white);
 }
 .faq-container {
@@ -1259,19 +1197,28 @@ a.user-name:hover { color: var(--accent); }
 
     <div class="hero-catchcopy">
       <h2>インスタの「片想い」を<br>ひと目で確認。</h2>
-      <p class="hero-subcopy">フォローしているのに返してくれないユーザーを、<br>ログイン不要で安全にチェック。</p>
-      <div class="hero-badges">
-        <span class="hero-badge"><span class="badge-icon">🔒</span>ログイン不要</span>
-        <span class="hero-badge"><span class="badge-icon">🛡️</span>BAN リスク 0%</span>
-        <span class="hero-badge"><span class="badge-icon">📱</span>ブラウザ完結</span>
-      </div>
+      <p class="hero-subcopy">フォローしているのに返してくれないユーザーを、<br>ログイン不要・パスワード不要で安全にチェック。</p>
     </div>
 
-    <div class="hero-cta">
+    <div class="hero-primary-cta">
+      <p class="step-label">STEP 1 — データを取得する</p>
+      <a class="hero-dl-btn" href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Instagramのデータダウンロードページを開く
+      </a>
+      <p class="step-hint">※ 「フォロワーとフォロー中」のみ・JSON形式で取得してください</p>
+    </div>
+
+    <div class="hero-cta-row">
       <button class="hero-cta-btn" onclick="Mieta.enterApp()" ontouchend="this.click()">
-        無料で解析する
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        ZIPファイルをアップロードする
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 16V4M12 4l-4 4M12 4l4 4M4 14v4a2 2 0 002 2h12a2 2 0 002-2v-4"/></svg>
       </button>
+      <div class="hero-badges">
+        <span class="hero-badge"><span class="badge-icon">🔒</span>ログイン不要</span>
+        <span class="hero-badge"><span class="badge-icon">🛡️</span>BAN 0%</span>
+        <span class="hero-badge"><span class="badge-icon">📱</span>ブラウザ完結</span>
+      </div>
     </div>
 
     <div style="position:absolute;bottom:clamp(60px,10vh,100px);left:50%;transform:translateX(-50%);font-size:9px;color:rgba(29,29,31,0.08);letter-spacing:0.1em;pointer-events:none" id="hero-version"></div>
@@ -1288,69 +1235,46 @@ a.user-name:hover { color: var(--accent); }
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     TRUST & TRUTH SECTION
-     ═══════════════════════════════════════ -->
-<section id="trust-section">
-  <div class="trust-container">
-    <div class="trust-header">
-      <h2 class="fade-in-section">TRUST & TRUTH</h2>
-      <p class="trust-tagline fade-in-section">安全であること。それが、すべての前提。</p>
-      <p class="trust-description fade-in-section">あなたのInstagramアカウントは、あなたの人間関係そのもの。mietaは、その価値を誰よりも理解しています。</p>
+<!-- ═══ WHY MIETA ═══ -->
+<section id="trust-section" class="why-section">
+  <div class="why-container">
+    <h2 class="fade-in-section">なぜmietaは安全なのか</h2>
+    <p class="why-lead fade-in-section">他社アプリとの決定的な違い — mietaはパスワードを知りません。</p>
+
+    <div class="why-grid fade-in-section">
+      <div class="why-card">
+        <div class="why-icon">🔐</div>
+        <h3>ログイン不要</h3>
+        <p>IDもパスワードも入力不要。乗っ取りリスクはゼロ。Instagram公式の「データダウンロード」機能だけを使います。</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💻</div>
+        <h3>データはブラウザ内で完結</h3>
+        <p>サーバーへの送信は一切なし。完全オフライン感覚で利用でき、ページを閉じればデータも消えます。</p>
+      </div>
+      <div class="why-card danger">
+        <div class="why-icon">⚠️</div>
+        <h3>他社アプリの危険性</h3>
+        <p>ID/PASS入力を求めるアプリは規約違反。永久凍結（BAN）や乗っ取りの原因になります。「足跡が見える」も詐欺です。</p>
+      </div>
     </div>
 
-    <!-- Comparison Table -->
-    <div class="trust-content-block fade-in-section">
-      <h3 style="font-size:18px;font-weight:700;color:var(--jet);margin-bottom:24px;letter-spacing:0.05em">THE HONEST COMPARISON</h3>
+    <div class="why-comparison fade-in-section">
       <table class="comparison-table">
         <thead>
           <tr>
-            <th style="text-align:left">特性</th>
-            <th style="text-align:left;color:var(--green)">mieta (Safety First)</th>
-            <th style="text-align:left;color:var(--red)">他社アプリ (Common Risks)</th>
+            <th></th>
+            <th style="color:var(--green)">mieta</th>
+            <th style="color:var(--red)">他社アプリ</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>ログイン</td>
-            <td><span class="table-icon safe">✓ 一切不要</span><br><small style="color:var(--sub)">ZIP手動読み込みのみ</small></td>
-            <td><span class="table-icon risk">✕ ID/PASS入力必須</span><br><small style="color:var(--sub)">不正アクセス扱いで即BAN リスク</small></td>
-          </tr>
-          <tr>
-            <td>BANリスク</td>
-            <td><span class="table-icon safe">✓ 0%</span><br><small style="color:var(--sub)">Instagram公式規約に完全準拠</small></td>
-            <td><span class="table-icon risk">✕ 高リスク</span><br><small style="color:var(--sub)">規約違反による永久凍結の可能性</small></td>
-          </tr>
-          <tr>
-            <td>料金</td>
-            <td><span class="table-icon safe">✓ ¥300/1回</span><br><small style="color:var(--sub)">買い切り・自動更新なし</small></td>
-            <td><span class="table-icon risk">✕ 月額¥1,500〜</span><br><small style="color:var(--sub)">巧妙に隠された自動サブスクリプション</small></td>
-          </tr>
-          <tr>
-            <td>データの行き先</td>
-            <td><span class="table-icon safe">✓ デバイス内のみ</span><br><small style="color:var(--sub)">サーバーへの送信は一切ありません</small></td>
-            <td><span class="table-icon risk">✕ 海外サーバー</span><br><small style="color:var(--sub)">あなたのデータは送信・蓄積されます</small></td>
-          </tr>
+          <tr><td>ログイン</td><td><span class="table-icon safe">✓ 不要</span></td><td><span class="table-icon risk">✕ ID/PASS必須</span></td></tr>
+          <tr><td>BANリスク</td><td><span class="table-icon safe">✓ 0%</span></td><td><span class="table-icon risk">✕ 高リスク</span></td></tr>
+          <tr><td>料金</td><td><span class="table-icon safe">✓ ¥300/1回</span></td><td><span class="table-icon risk">✕ 月額¥1,500〜</span></td></tr>
+          <tr><td>データ</td><td><span class="table-icon safe">✓ 端末内のみ</span></td><td><span class="table-icon risk">✕ 海外サーバー送信</span></td></tr>
         </tbody>
       </table>
-    </div>
-
-    <!-- BAN Warning Card -->
-    <div class="trust-content-block fade-in-section">
-      <div class="ban-warning">
-        <h3>ACCOUNT SAFETY NOTICE</h3>
-        <p>Instagramのアカウントを、安易なアプリに預けないでください。IDとパスワードを要求する全てのサードパーティアプリは、公式規約違反による永久凍結（BAN）の引き金となります。</p>
-        <p>mietaは、あなたのログイン情報を1文字も知りません。それが、私たちが提供する最大の安心です。</p>
-      </div>
-    </div>
-
-    <!-- Fraud Education -->
-    <div class="trust-content-block fade-in-section">
-      <div class="fraud-section">
-        <h3>THE TRUTH ABOUT "FOOTPRINT" APPS</h3>
-        <p><strong>「足跡が見える」という嘘について。</strong></p>
-        <p>Instagram公式APIには、閲覧履歴（足跡）を外部に提供する機能は存在しません。「誰がプロフィールを見たか教える」と謳うアプリは、例外なくあなたのデータを盗むための詐欺です。</p>
-      </div>
     </div>
   </div>
 </section>
@@ -1359,53 +1283,38 @@ a.user-name:hover { color: var(--accent); }
 <section class="steps-section fade-in-section">
   <div class="steps-container">
     <h2>使い方はかんたん3ステップ</h2>
-    <p class="steps-sub">パスワードの入力は一切不要。あなたのデータはブラウザ内だけで処理されます。</p>
     <div class="steps-grid">
-      <div class="step-card">
+      <div class="step-card active">
         <div class="step-number">1</div>
-        <h3>データを準備</h3>
-        <p>Instagramの設定から「個人データをダウンロード」を選択。フォロー情報のZIPファイルを取得します。</p>
+        <h3>データを取得</h3>
+        <p>Instagramの設定から「個人データをダウンロード」→「フォロワーとフォロー中」のみ→JSON形式でリクエスト。</p>
+        <details class="step-details">
+          <summary>詳しい手順を見る</summary>
+          <ol>
+            <li>Instagramアプリ →「設定」→「アカウントセンター」</li>
+            <li>「あなたの情報とアクセス許可」→「情報をダウンロード」</li>
+            <li>対象アカウントを選択し「一部の情報」を選ぶ</li>
+            <li>「フォロワーとフォロー中」のみにチェック</li>
+            <li>形式は必ず <strong>JSON</strong> を選択</li>
+            <li>メールでZIPファイルを受信（数分〜48時間）</li>
+          </ol>
+        </details>
       </div>
       <div class="step-card">
         <div class="step-number">2</div>
         <h3>ファイルをアップロード</h3>
-        <p>ダウンロードしたZIPファイルをmietaにドロップ。サーバーへの送信は一切ありません。</p>
+        <p>受け取ったZIPファイルをmietaにドロップ。サーバー送信なし、ブラウザ内で処理。</p>
       </div>
       <div class="step-card">
         <div class="step-number">3</div>
         <h3>結果を確認</h3>
-        <p>「あなただけがフォローしている人」が即座にリスト表示。フォロバ率もひと目でわかります。</p>
+        <p>「片想い」ユーザーが即座にリスト表示。フォロバ率もひと目でわかります。</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ SAFETY SECTION ═══ -->
-<section class="safety-section fade-in-section">
-  <div class="safety-container">
-    <h2><span class="ig-underline">ログイン不要</span>だから、安全</h2>
-    <p class="safety-sub">Instagram関連ツールで最も危険なのは、パスワードを入力すること。mietaはその必要がありません。</p>
-    <div class="safety-grid">
-      <div class="safety-card">
-        <div class="safety-icon">🔐</div>
-        <h3>パスワード入力なし</h3>
-        <p>IDもパスワードも一切不要。アカウント乗っ取りのリスクはゼロです。</p>
-      </div>
-      <div class="safety-card">
-        <div class="safety-icon">💻</div>
-        <h3>ブラウザ内で完結</h3>
-        <p>データはサーバーに送信されません。完全オフライン感覚で利用できます。</p>
-      </div>
-      <div class="safety-card">
-        <div class="safety-icon">✅</div>
-        <h3>Instagram規約に準拠</h3>
-        <p>公式のデータダウンロード機能を使用。BANリスクは0%です。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ FAQ SECTION ═══ -->
+<!-- ═══ FAQ ═══ -->
 <section class="faq-section fade-in-section">
   <div class="faq-container">
     <h2>よくある質問</h2>
@@ -1415,7 +1324,7 @@ a.user-name:hover { color: var(--accent); }
         <span class="faq-toggle">+</span>
       </button>
       <div class="faq-answer">
-        <p>はい、完全にログイン不要です。mietaはInstagram公式の「データダウンロード」機能で取得したZIPファイルを読み取るだけです。あなたのIDやパスワードを入力する画面は一切ありません。</p>
+        <p>はい。mietaはInstagram公式の「データダウンロード」機能で取得したZIPファイルを読み取るだけです。ID・パスワードを入力する画面は一切ありません。</p>
       </div>
     </div>
     <div class="faq-item">
@@ -1424,16 +1333,7 @@ a.user-name:hover { color: var(--accent); }
         <span class="faq-toggle">+</span>
       </button>
       <div class="faq-answer">
-        <p>いいえ。アップロードされたファイルはすべてあなたのブラウザ内（端末上）だけで処理されます。外部サーバーへの送信は一切行いません。ページを閉じればデータも消えます。</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
-        アカウントがBANされるリスクはありますか？
-        <span class="faq-toggle">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>ありません。mietaはInstagramのサーバーに一切アクセスしません。公式が提供するデータダウンロード機能を使うだけなので、利用規約に完全に準拠しています。</p>
+        <p>いいえ。すべてブラウザ内で処理され、外部サーバーへの送信は一切ありません。ページを閉じればデータも消えます。</p>
       </div>
     </div>
     <div class="faq-item">
@@ -1442,32 +1342,9 @@ a.user-name:hover { color: var(--accent); }
         <span class="faq-toggle">+</span>
       </button>
       <div class="faq-answer">
-        <p>基本機能は無料でお使いいただけます。片想いユーザーの一部を確認できます。全リストの表示や詳細分析は、mieta+（¥330・買い切り）で解放されます。月額課金や自動更新はありません。</p>
+        <p>基本機能は無料です。全リストの表示はmieta+（¥330・買い切り）で解放されます。月額課金や自動更新はありません。</p>
       </div>
     </div>
-    <div class="faq-item">
-      <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
-        ZIPファイルはどうやって取得しますか？
-        <span class="faq-toggle">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>Instagramアプリの「設定」→「アカウントセンター」→「あなたの情報とアクセス許可」→「個人データをダウンロード」から取得できます。形式はJSONを選んでください。通常数分〜48時間で届きます。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SEO ARTICLE ═══ -->
-<section class="seo-section">
-  <div class="seo-container">
-    <h2>なぜ公式アプリではなくmietaが必要なのか</h2>
-    <p>Instagramの公式アプリには、「自分がフォローしているのにフォローバックされていない人」を一覧で確認する機能がありません。フォロー中リストとフォロワーリストを目視で比較する必要があり、フォロー数が多いほど現実的ではありません。</p>
-
-    <h3>サードパーティアプリの危険性</h3>
-    <p>App StoreやGoogle Playには「フォロバチェッカー」を謳うアプリが多数存在しますが、その多くはInstagramのIDとパスワードの入力を求めます。これはInstagramの利用規約に明確に違反しており、アカウントの永久凍結（BAN）の原因となります。さらに、入力した認証情報が第三者に悪用され、アカウント乗っ取りにつながるケースも報告されています。</p>
-
-    <h3>mietaが選ばれる理由</h3>
-    <p>mietaはInstagram公式の「個人データダウンロード」機能を利用します。これはInstagramが正式に提供している機能であり、利用規約に完全に準拠しています。ダウンロードしたZIPファイルをブラウザにアップロードするだけで、サーバーへの通信は一切発生しません。パスワードの入力も不要です。安全に、そして正確にフォロー関係を分析できる、それがmietaです。</p>
   </div>
 </section>
 
