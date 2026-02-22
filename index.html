@@ -90,9 +90,24 @@ button { font-family: inherit; }
 }
 .hero-logo {
   position: absolute; top: max(20px, env(safe-area-inset-top)); left: max(24px, env(safe-area-inset-left));
-  font-size: 20px; font-weight: 600; letter-spacing: -0.03em;
-  color: rgba(255,255,255,0.3);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
   opacity: 0; animation: heroFadeIn 1s ease 0.3s forwards;
+}
+.hero-logo svg {
+  width: 80px;
+  height: 80px;
+}
+.hero-logo-text {
+  font-size: 12px; font-weight: 600; letter-spacing: -0.03em;
+  color: rgba(255,255,255,0.3);
+  opacity: 0; animation: logoTextReveal 1s ease 1.5s forwards;
+}
+.nav-logo-svg {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .hero-pro-btn {
   position: absolute; top: max(18px, env(safe-area-inset-top)); right: max(24px, env(safe-area-inset-right));
@@ -622,11 +637,236 @@ a.user-name:hover { color: var(--accent); }
 .reset-btn { margin-top: 8px; padding: 0; background: none; border: none; cursor: pointer; font-size: 13px; color: var(--accent); }
 .reset-btn:hover { text-decoration: underline; }
 
+/* ═══ TRUST & TRUTH SECTION ═══ */
+#trust-section {
+  background: var(--white);
+  padding: 80px 24px;
+  position: relative;
+  z-index: 2;
+}
+.trust-container {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.trust-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+.trust-header h2 {
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--jet);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeSlide 0.8s var(--ease-out) forwards;
+}
+.trust-tagline {
+  font-size: clamp(13px, 2vw, 15px);
+  color: var(--sub);
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeSlide 0.8s var(--ease-out) 0.2s forwards;
+}
+.trust-description {
+  font-size: 15px;
+  color: var(--jet);
+  line-height: 1.8;
+  max-width: 680px;
+  margin: 16px auto 0;
+  opacity: 0;
+  animation: fadeSlide 0.8s var(--ease-out) 0.4s forwards;
+}
+
+/* Trust sections with fade-in */
+.trust-content-block {
+  margin-bottom: 60px;
+  padding: 48px;
+  border-radius: var(--radius-lg);
+  background: var(--off-white);
+}
+.trust-content-block.fade-in-section {
+  opacity: 0;
+  transform: translateY(32px);
+}
+.trust-content-block.fade-in-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+  background: var(--white);
+}
+
+/* Comparison Table */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+}
+.comparison-table th,
+.comparison-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.comparison-table th {
+  background: var(--off-white);
+  font-weight: 600;
+  color: var(--jet);
+}
+.comparison-table tr:last-child td {
+  border-bottom: none;
+}
+.comparison-table td:first-child {
+  font-weight: 500;
+  color: var(--jet);
+  width: 35%;
+}
+.comparison-table td:nth-child(2) {
+  color: var(--jet);
+  font-weight: 400;
+}
+.comparison-table td:nth-child(3) {
+  color: var(--sub);
+  font-weight: 400;
+}
+.table-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+.table-icon.safe { color: var(--green); }
+.table-icon.risk { color: var(--red); }
+
+/* Ban Warning Card */
+.ban-warning {
+  border-left: 4px solid var(--red);
+  padding: 32px;
+  background: rgba(255,59,48,0.05);
+  border-radius: var(--radius-md);
+  margin: 40px 0;
+}
+.ban-warning h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--jet);
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+.ban-warning p {
+  font-size: 14px;
+  color: var(--jet);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.ban-warning p:last-child {
+  margin-bottom: 0;
+  font-weight: 500;
+  color: var(--red);
+}
+
+/* Fraud Education */
+.fraud-section {
+  background: linear-gradient(135deg, rgba(88,86,214,0.04), rgba(0,113,227,0.04));
+  padding: 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0,113,227,0.1);
+}
+.fraud-section h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--jet);
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+.fraud-section p {
+  font-size: 14px;
+  color: var(--jet);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.fraud-section p:last-child {
+  margin-bottom: 0;
+}
+
+/* ═══ SHARE BUTTONS ═══ */
+.share-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.share-btn-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0,0,0,0.06);
+  background: var(--off-white);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sub);
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.share-btn-social:hover {
+  background: #fff;
+  border-color: rgba(0,0,0,0.1);
+  color: var(--jet);
+}
+.share-btn-social svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 /* ═══ KEYFRAMES ═══ */
 @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
 @keyframes fadeSlide { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
 @keyframes gentleFloat { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-6px) } }
 @keyframes subtlePulse { 0%,100% { opacity:0.5 } 50% { opacity:1 } }
+
+/* ═══ SVG LOGO ANIMATIONS ═══ */
+@keyframes orbitDraw {
+  from { stroke-dashoffset: var(--circumference); opacity: 0; }
+  5% { opacity: 1; }
+  to { stroke-dashoffset: 0; opacity: 1; }
+}
+@keyframes irisBounce {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.06); }
+  80% { transform: scale(0.98); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes dotAppear {
+  from { opacity: 0; transform: scale(0); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes logoTextReveal {
+  from { opacity: 0; transform: translateY(8px); letter-spacing: 0.3em; }
+  to { opacity: 0.3; transform: translateY(0); letter-spacing: -0.03em; }
+}
+@keyframes lightSweep {
+  0% { opacity: 0; transform: rotate(-30deg); }
+  20% { opacity: 0.15; }
+  100% { opacity: 0; transform: rotate(330deg); }
+}
+
+/* ═══ TRUST SECTION ANIMATIONS ═══ */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(32px);
+}
+.fade-in-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+}
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 480px) {
@@ -652,7 +892,35 @@ a.user-name:hover { color: var(--accent); }
   <canvas id="lens-canvas"></canvas>
 
   <div class="hero-overlay">
-    <span class="hero-logo">mieta</span>
+    <div class="hero-logo">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="--circumference:502.65">
+        <!-- Outer orbit circle -->
+        <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" style="stroke-dasharray:502.65;stroke-dashoffset:502.65;animation:orbitDraw 1s ease 0s forwards"/>
+        <!-- Inner iris circles -->
+        <g style="animation:irisBounce 1s cubic-bezier(.16,1,.3,1) 0.5s forwards;transform-origin:100px 100px;opacity:0">
+          <circle cx="100" cy="100" r="45" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+          <circle cx="100" cy="100" r="38" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        </g>
+        <!-- Center dot -->
+        <circle cx="100" cy="100" r="4" fill="rgba(255,255,255,0.5)" style="animation:dotAppear 0.6s ease 0.8s forwards;opacity:0"/>
+        <!-- Decorative dots around orbit -->
+        <circle cx="180" cy="100" r="2.5" fill="rgba(255,255,255,0.3)" style="animation:dotAppear 0.5s ease 0.6s forwards;opacity:0"/>
+        <circle cx="20" cy="100" r="2.5" fill="rgba(255,255,255,0.3)" style="animation:dotAppear 0.5s ease 0.7s forwards;opacity:0"/>
+        <circle cx="100" cy="20" r="2.5" fill="rgba(255,255,255,0.3)" style="animation:dotAppear 0.5s ease 0.8s forwards;opacity:0"/>
+        <circle cx="100" cy="180" r="2.5" fill="rgba(255,255,255,0.3)" style="animation:dotAppear 0.5s ease 0.9s forwards;opacity:0"/>
+        <circle cx="142" cy="58" r="2" fill="rgba(255,255,255,0.25)" style="animation:dotAppear 0.5s ease 0.85s forwards;opacity:0"/>
+        <circle cx="58" cy="142" r="2" fill="rgba(255,255,255,0.25)" style="animation:dotAppear 0.5s ease 0.95s forwards;opacity:0"/>
+        <!-- Light sweep overlay -->
+        <defs>
+          <radialGradient id="lightSweep" cx="50%" cy="50%">
+            <stop offset="0%" style="stop-color:rgba(255,255,255,0.1)"/>
+            <stop offset="100%" style="stop-color:rgba(255,255,255,0)"/>
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="100" fill="url(#lightSweep)" style="animation:lightSweep 1s ease-in 1.2s forwards;opacity:0"/>
+      </svg>
+      <span class="hero-logo-text">mieta</span>
+    </div>
     <button class="hero-pro-btn" onclick="Mieta.handleProButtonClick()">mieta+</button>
 
     <div class="hero-copy">
@@ -682,6 +950,73 @@ a.user-name:hover { color: var(--accent); }
 </section>
 
 <!-- ═══════════════════════════════════════
+     TRUST & TRUTH SECTION
+     ═══════════════════════════════════════ -->
+<section id="trust-section">
+  <div class="trust-container">
+    <div class="trust-header">
+      <h2 class="fade-in-section">TRUST & TRUTH</h2>
+      <p class="trust-tagline fade-in-section">安全であること。それが、すべての前提。</p>
+      <p class="trust-description fade-in-section">あなたのInstagramアカウントは、あなたの人間関係そのもの。mietaは、その価値を誰よりも理解しています。</p>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="trust-content-block fade-in-section">
+      <h3 style="font-size:18px;font-weight:700;color:var(--jet);margin-bottom:24px;letter-spacing:0.05em">THE HONEST COMPARISON</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th style="text-align:left">特性</th>
+            <th style="text-align:left;color:var(--green)">mieta (Safety First)</th>
+            <th style="text-align:left;color:var(--red)">他社アプリ (Common Risks)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ログイン</td>
+            <td><span class="table-icon safe">✓ 一切不要</span><br><small style="color:var(--sub)">ZIP手動読み込みのみ</small></td>
+            <td><span class="table-icon risk">✕ ID/PASS入力必須</span><br><small style="color:var(--sub)">不正アクセス扱いで即BAN リスク</small></td>
+          </tr>
+          <tr>
+            <td>BANリスク</td>
+            <td><span class="table-icon safe">✓ 0%</span><br><small style="color:var(--sub)">Instagram公式規約に完全準拠</small></td>
+            <td><span class="table-icon risk">✕ 高リスク</span><br><small style="color:var(--sub)">規約違反による永久凍結の可能性</small></td>
+          </tr>
+          <tr>
+            <td>料金</td>
+            <td><span class="table-icon safe">✓ ¥300/1回</span><br><small style="color:var(--sub)">買い切り・自動更新なし</small></td>
+            <td><span class="table-icon risk">✕ 月額¥1,500〜</span><br><small style="color:var(--sub)">巧妙に隠された自動サブスクリプション</small></td>
+          </tr>
+          <tr>
+            <td>データの行き先</td>
+            <td><span class="table-icon safe">✓ デバイス内のみ</span><br><small style="color:var(--sub)">サーバーへの送信は一切ありません</small></td>
+            <td><span class="table-icon risk">✕ 海外サーバー</span><br><small style="color:var(--sub)">あなたのデータは送信・蓄積されます</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BAN Warning Card -->
+    <div class="trust-content-block fade-in-section">
+      <div class="ban-warning">
+        <h3>ACCOUNT SAFETY NOTICE</h3>
+        <p>Instagramのアカウントを、安易なアプリに預けないでください。IDとパスワードを要求する全てのサードパーティアプリは、公式規約違反による永久凍結（BAN）の引き金となります。</p>
+        <p>mietaは、あなたのログイン情報を1文字も知りません。それが、私たちが提供する最大の安心です。</p>
+      </div>
+    </div>
+
+    <!-- Fraud Education -->
+    <div class="trust-content-block fade-in-section">
+      <div class="fraud-section">
+        <h3>THE TRUTH ABOUT "FOOTPRINT" APPS</h3>
+        <p><strong>「足跡が見える」という嘘について。</strong></p>
+        <p>Instagram公式APIには、閲覧履歴（足跡）を外部に提供する機能は存在しません。「誰がプロフィールを見たか教える」と謳うアプリは、例外なくあなたのデータを盗むための詐欺です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
      APP: Service Screens
      ═══════════════════════════════════════ -->
 <div id="app-section">
@@ -697,7 +1032,19 @@ a.user-name:hover { color: var(--accent); }
   <!-- Navbar -->
   <nav id="navbar">
     <div class="nav-inner">
-      <button class="nav-logo" onclick="Mieta.reset()">mieta</button>
+      <button class="nav-logo" onclick="Mieta.reset()">
+        <div class="nav-logo-svg">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(29,29,31,0.4)" stroke-width="1.5"/>
+            <circle cx="100" cy="100" r="45" fill="none" stroke="rgba(29,29,31,0.25)" stroke-width="1"/>
+            <circle cx="100" cy="100" r="4" fill="rgba(29,29,31,0.5)"/>
+            <circle cx="180" cy="100" r="1.8" fill="rgba(29,29,31,0.3)"/>
+            <circle cx="20" cy="100" r="1.8" fill="rgba(29,29,31,0.3)"/>
+            <circle cx="100" cy="20" r="1.8" fill="rgba(29,29,31,0.3)"/>
+            <circle cx="100" cy="180" r="1.8" fill="rgba(29,29,31,0.3)"/>
+          </svg>
+        </div>
+      </button>
       <div class="nav-right">
         <button class="nav-link" onclick="Mieta.goToScreen('guide')">使い方</button>
         <div id="nav-auth" style="display:none;">
@@ -777,6 +1124,20 @@ a.user-name:hover { color: var(--accent); }
         <div class="results-actions">
           <button class="reset-btn" onclick="Mieta.reset()">新しいファイルを解析</button>
           <button class="results-history-btn" id="history-btn" onclick="Mieta.openHistory()" style="display:none;">過去の解析結果</button>
+        </div>
+        <div class="share-actions" id="share-actions" style="display:none;">
+          <a class="share-btn-social" id="share-line" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.99 3.65 9.15 8.43 9.9.1.01.2.01.29 0 .55-.09 1.08-.23 1.59-.42-.06-.16-.1-.34-.1-.53 0-1.1.9-2 2-2h1.83c1.1 0 2 .9 2 2 0 1.1.9 2 2 2s2-.9 2-2c0-4.99-3.65-9.15-8.43-9.9-.1-.01-.2-.01-.29 0C4.86 3.15 2 6.48 2 10.5v1.5c0 1.1.9 2 2 2h1.83c1.1 0 2-.9 2-2 0-1.1.9-2 2-2s2 .9 2 2 .9 2 2 2h1.83c1.1 0 2 .9 2 2 0 1.1.9 2 2 2s2-.9 2-2c0-4.99-3.65-9.15-8.43-9.9z"/></svg>
+            LINE
+          </a>
+          <a class="share-btn-social" id="share-x" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.657l-5.207-6.807-5.974 6.807H2.882l7.732-8.835L1.227 2.25h6.836l4.709 6.231 5.45-6.231zM17.15 18.75h1.828L5.856 4.051H3.914l13.236 14.699z"/></svg>
+            X
+          </a>
+          <button class="share-btn-social" onclick="Mieta.copyShareText()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            <span id="copy-share-label">コピー</span>
+          </button>
         </div>
       </div>
       <div class="stats-grid" id="stats-grid"></div>
@@ -890,7 +1251,7 @@ const Mieta = (function(){
   'use strict';
 
   /* ═══ CONSTANTS ═══ */
-  const BUILD_VERSION = 'v5.0-supabase-2026-02-22';
+  const BUILD_VERSION = 'v6.0-trust-2026-02-22';
   const PREMIUM_KEY = 'mieta_premium';
   const SORT_MODES = ['name','newest','oldest'];
   const SORT_LABELS = { name:'名前順', newest:'新しい順', oldest:'古い順' };
@@ -1107,7 +1468,9 @@ const Mieta = (function(){
   function enterApp(){
     state.phase='app';
     const hero=$('#hero-section');
+    const trust=$('#trust-section');
     hero.classList.add('hidden');
+    if(trust) trust.style.display='none';
     setTimeout(()=>{
       stopLens();
       hero.style.display='none';
@@ -1129,6 +1492,7 @@ const Mieta = (function(){
     $('#app-section').classList.remove('active');
     $('#navbar').classList.remove('active');
     $('#noise-overlay').classList.remove('active');
+    const trust=$('#trust-section'); if(trust) trust.style.display='';
     document.body.style.background='#000';
 
     const hero=$('#hero-section');
@@ -1398,6 +1762,7 @@ const Mieta = (function(){
     else histBtn.style.display='none';
 
     renderTabs(); renderList();
+    updateShareLinks();
   }
 
   function renderTabs(){
@@ -1485,6 +1850,25 @@ const Mieta = (function(){
       try{ await navigator.share({title:`mieta — ${cat.label}`,text}); }
       catch(e){ if(e.name!=='AbortError'){ navigator.clipboard.writeText(text); toast('クリップボードにコピーしました'); }}
     } else { navigator.clipboard.writeText(text); toast('クリップボードにコピーしました'); }
+  }
+
+  function copyShareText(){
+    const count = state.data ? state.data.unrequited.length : 0;
+    const text = `${count}人の片思いを、整理しました。mietaで、つながりを透明に。\nhttps://ikkeitatsumi.github.io/mieta/`;
+    navigator.clipboard?.writeText(text);
+    $('#copy-share-label').textContent = 'Copied!';
+    setTimeout(() => { $('#copy-share-label').textContent = 'コピー'; }, 2000);
+  }
+
+  function updateShareLinks(){
+    const count = state.data ? state.data.unrequited.length : 0;
+    const text = encodeURIComponent(`${count}人の片思いを、整理しました。mietaで、つながりを透明に。`);
+    const url = encodeURIComponent('https://ikkeitatsumi.github.io/mieta/');
+    const lineEl = $('#share-line');
+    const xEl = $('#share-x');
+    if(lineEl) lineEl.href = `https://social-plugins.line.me/lineit/share?url=${url}&text=${text}`;
+    if(xEl) xEl.href = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+    $('#share-actions').style.display = 'flex';
   }
 
   /* ═══ AUTH & PREMIUM ═══ */
@@ -1813,11 +2197,24 @@ const Mieta = (function(){
     else switchOS('iphone');
   }
 
+  function initScrollObserver(){
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-in-section').forEach(el => obs.observe(el));
+  }
+
   /* ═══ INIT ═══ */
   function init(){
     initLens();
     initUpload();
     initScroll();
+    initScrollObserver();
     detectOS();
     setupAuthListener();
     checkAuthState();
@@ -1831,7 +2228,7 @@ const Mieta = (function(){
 
   /* ═══ PUBLIC API ═══ */
   return {
-    goToScreen, switchOS, renderList, copyList, shareList,
+    goToScreen, switchOS, renderList, copyList, shareList, copyShareText, updateShareLinks,
     reset, purchasePremium, closeUnlock, openUnlock,
     switchTab, cycleSort, toast, enterApp,
     handleProButtonClick, showAuthModal, closeAuth, switchAuthMode, submitAuth, logout,
